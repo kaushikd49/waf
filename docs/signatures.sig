@@ -1,0 +1,4 @@
+HEADER:User-Agent,CONTAINS:"<script>"
+HEADER:User-Agent,CONTAINS:"bot"
+REQUEST_METHOD:GET,PARAMETER:*,CONTAINS:"union all select"
+REQUEST_METHOD:POST,PARAMETER:foo,CONTAINS:"../../../../"
