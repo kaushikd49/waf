@@ -4,6 +4,7 @@
 #define BUFFER 150
 #define MAXLINES 150
 char ** parseSignatures(char *f){
+    /* NULL marks end of sigs array. each element of sigs is pointer to char array where each char array is terminated by \0 */
     FILE *fp;
     char buff[BUFFER];
     fp=fopen(f,"r");
@@ -23,13 +24,13 @@ char ** parseSignatures(char *f){
 	if(buff[i]=='\n'){
 	    buff[i]='\0';
 	}
-	//printf("%s\n",buff);
+	/* printf("%s\n",buff); */
 	sigs[c]=(char *)malloc(sizeof(char)*(strlen(buff)+1)); /* +1 for \0 */
 	strcpy(sigs[c],buff);
-	//printf("%s,%d\n",sigs[c],strcmp(buff,sigs[c]));
+	/* printf("%s,%d\n",sigs[c],strcmp(buff,sigs[c])); */
 	c++;
     }
     /* read till EOF */
     fclose(fp);
-    return NULL;
+    return sigs;
 }

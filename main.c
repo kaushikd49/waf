@@ -1,7 +1,11 @@
 #include<stdio.h>
 #include<stdlib.h>
 
-void main(){
+int header_allow(char *hdr,char **sigs);
+char ** parseSignatures(char *f);
+int req_allow(char *hdr,char **sigs);
+
+int main(){
     /* test bed */
     char *sig_file_path="./docs/signatures.sig";
     char **sigs=parseSignatures(sig_file_path);
@@ -20,4 +24,10 @@ void main(){
     else{
 	printf("not allowed\n");
     }
+    int i=0;
+    for(;sigs[i];i++){
+	free(sigs[i]);
+    }
+    free(sigs);
+    return 0;
 }
