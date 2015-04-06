@@ -1,2 +1,13 @@
 WAF Project
 ######
+
+run:
+
+$ make
+$ ./waf
+
+Test cases present in main.c
+Header filter in header_allow.c
+Request filter in req_allow.c
+Signature file parser in parse_sigs.c
+Signature file in doc/signatures.sig
