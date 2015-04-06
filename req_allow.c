@@ -3,7 +3,7 @@
 #include<string.h>
 #include<regex.h>
 #define BUFSIZE 1024
-#define PARAM 100
+#define PARAM 200
 #define CONTAINS 500
 
 int match_query(char *str,char *pat,int flags){

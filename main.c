@@ -10,13 +10,46 @@ int main(){
     char *sig_file_path="./docs/signatures.sig";
     char **sigs=parseSignatures(sig_file_path);
     /* example header string */
-    char *hdr="Mime-Tye### mim Mozilla/5.0 (X11; Linux x86_64; rv:12.0) Gecko/20100101 Firefox/21.0";
+    /* header string should be of form */
+    /* <header-field-name>###<header-field-value> */
+    /* ### should be the delimiter */
+    /* header field name must match exactly to sigs file entries */
+    /* TEST CASE 1 */
+    char *hdr="User-Agent### Mozilla/5.0 (X11; Linux x86_64; rv:12.0) Gecko/20100101 Firefox/21.0";
     if(header_allow(hdr,sigs)==0){ /* case insensitive */
 	printf("header allowed\n");
     }
     else{
 	printf("header not allowed\n");
     }
+
+    /* TEST CASE 2 */
+    char *hdr_2="Content-Type### application//x-www-form-urlencoded";
+    if(header_allow(hdr_2,sigs)==0){ /* case insensitive */
+	printf("header allowed\n");
+    }
+    else{
+	printf("header not allowed\n");
+    }
+
+    /* TEST CASE 3 */
+    char *hdr_3="User-Agent###<script>dsafgadg()</script>";
+    if(header_allow(hdr_3,sigs)==0){ /* case insensitive */
+	printf("header allowed\n");
+    }
+    else{
+	printf("header not allowed\n");
+    }
+
+    /* TEST CASE 4 */
+    char *hdr_4="User-Agent###bot";
+    if(header_allow(hdr_4,sigs)==0){ /* case insensitive */
+	printf("header allowed\n");
+    }
+    else{
+	printf("header not allowed\n");
+    }
+
     /* req body should not have any string at the end after the 
        last parameter's value. 
        Either put \0 right after last parameter's value in the string 

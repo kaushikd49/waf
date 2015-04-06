@@ -3,7 +3,7 @@
 #include<string.h>
 #include<regex.h>
 #define BUFSIZE 1024
-#define PARAM 100
+#define PARAM 200
 #define CONTAINS 500
 
 int match_query(char *str,char *pat,int flagse);
@@ -38,13 +38,18 @@ int header_allow(char *hdr,char **sigs){
     /* now we have heder field in hdr_field and value in hdr_value */
 
     int i;
-    char contains[CONTAINS];
+    char contains[CONTAINS],temp_hdr_field[PARAM];
     for(i=0;sigs[i];i++){
 
 	/* TODO: how about splitting signature into heder and contains and then fo processing?? */
 	
-	/* check if hdr_field is in signature string */
-	int isMatch = match_query(sigs[i],hdr_field,REG_ICASE);
+	memset(temp_hdr_field,0,PARAM);
+	strncpy(temp_hdr_field,"^HEADER:",PARAM);
+	strncat(temp_hdr_field,hdr_field,PARAM);
+	strncat(temp_hdr_field,",",PARAM);
+	
+	/* check if hdr_field-> (^<field-name>:) is in signature string */
+	int isMatch = match_query(sigs[i],temp_hdr_field,REG_ICASE);
 	if(!isMatch){
 	    /* sigs[i] does not have hdr_field */
 	    continue;
