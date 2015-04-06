@@ -3,6 +3,8 @@
 #include<string.h>
 #include<regex.h>
 #define BUFSIZE 1024
+#define PARAM 100
+#define CONTAINS 500
 
 int match_query(char *str,char *pat,int flagse);
 
@@ -11,116 +13,68 @@ int get_substr(char *str,char *pat,int n,char **mem,int flags);
 int header_allow(char *hdr,char **sigs){
     /* returns 0 on not-allowed */
     /* returns 1 on allowed */
+    
     /* assumes input header sting is of form */
     /* <header field>:<text> */
     /* Eg:   User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:12.0) Gecko/20100101 Firefox/21.0 */
     /* max size of input hdr string is 1024 bytes */
-    char buf[BUFSIZE];
-    strncpy(buf,hdr,BUFSIZE);
-    char *token;
-    token=strtok(buf,":");
-    int i;
-    char rx_string[BUFSIZE],msgbuf[100],inr_msgbuf[100];
-    regex_t *regex,*inr_regex,*fnl_regex;
-    regex=(regex_t *)malloc(sizeof(regex_t));
-    inr_regex=(regex_t *)malloc(sizeof(regex_t));
-    fnl_regex=(regex_t *)malloc(sizeof(regex_t));
-    memset(rx_string,'\0',BUFSIZE);
-    strncpy(rx_string,token,BUFSIZE);
-    printf("regex is %s,len is %d\n",rx_string,(int)strlen(rx_string));
-    int reti; /* = regcomp(regex,rx_string,REG_ICASE); */
-    int inr_reti,fnl_reti;
-    int isfound=0;
-    /* if(reti){			/\* retrns non zero for failure *\/ */
-    /* 	fprintf(stderr,"could not compile regex\n"); */
-    /* 	regfree(regex); */
-    /* 	return 0; */
-    /* } */
-    for(i=0;sigs[i] && !isfound;i++,regfree(inr_regex),regfree(fnl_regex),regfree(regex)){
 
-    	//strncpy(buf,sig[i],strlen(sig[i])+1); /* clear buf */
-	/* match_query(rx_string) */
-	reti = regcomp(regex,rx_string,REG_ICASE);
-	if(reti){			/* retrns non zero for failure */
-	    fprintf(stderr,"could not compile regex\n");
-	    regfree(regex);
-	    free(regex);
-	    free(inr_regex);
-	    free(fnl_regex);
-	    return 0;
-	}
-    	reti = regexec(regex,sigs[i],0,NULL,0);
-    	if(!reti){
-    	    printf("sigs match\n");
-	    //regfree(&regex);
-    	    /* header field matched */
-	    /* now check if the header contains the "contains" value from the signatures */
-	    inr_reti = regcomp(inr_regex,"\"(.+)\"",REG_ICASE|REG_EXTENDED);
-	    if(inr_reti){			/* retrns non zero for failure */
-		fprintf(stderr,"could not compile inner regex\n");
-		continue;
-	    }
-	    size_t ngroups=2;
-	    regmatch_t *groups=malloc(ngroups*sizeof(regmatch_t));
-	    if(!(inr_reti=regexec(inr_regex,sigs[i],ngroups,groups,0))){
-	    
-		
-		/* no need of buf and token any more. since we have already constructed the regexp and we can use that in every iteration */
-		/* clear buf */
-		strncpy(buf,"",BUFSIZE);
-		/* rm_eo points to the byte after the end match. eo-so gives the size of group */
-		/* copy the group contents into the buf */
-		strncpy(buf,sigs[i]+groups[1].rm_so,groups[1].rm_eo-groups[1].rm_so);
-		/* since eo-so gives length of group. using this put \0 at the end of buf */
-		buf[groups[1].rm_eo-groups[1].rm_so]='\0';
-		/* matches complete regexp */
-		/* printf("start %c -> end %c\n",sigs[i][groups[0].rm_so],sigs[i][groups[0].rm_eo-1]); */
-		/* matches the first group of the regexp */
-		printf("start %c -> end %c -> %s\n",sigs[i][groups[1].rm_so],sigs[i][groups[1].rm_eo-1],buf);
-		/* now check if group present in header */
-		/* construct pattern */
-		fnl_reti = regcomp(fnl_regex,buf,REG_ICASE|REG_EXTENDED);
-		if(fnl_reti){
-		    fprintf(stderr,"could not compile final regex\n");
-		    continue;
-		}
-		if(!(fnl_reti=regexec(fnl_regex,hdr,0,NULL,0))){
-		    /* signature fragment is contained in hdr string */
-		    isfound=1;
-		}
-		else if(fnl_reti==REG_NOMATCH){
-		    
-		    printf("No final match\n");
-		}
-		else{
-		    regerror(fnl_reti,fnl_regex,msgbuf,sizeof(msgbuf));
-		    fprintf(stderr,"final regex match failed: %s\n",msgbuf);
-		}
-
-	    }
-	    else if(inr_reti == REG_NOMATCH){
-		printf("No inner match\n");
-	    }
-	    else{
-		regerror(inr_reti,inr_regex,inr_msgbuf,sizeof(inr_msgbuf));
-		fprintf(stderr,"inner regex match failed: %s\n",inr_msgbuf);
-	    }
-	    free(groups);
-    	}
-    	else if(reti == REG_NOMATCH){
-    	    printf("No match\n");
-    	}
-    	else{
-    	    regerror(reti,regex,msgbuf,sizeof(msgbuf));
-    	    fprintf(stderr,"regex match failed: %s\n",msgbuf);
-    	}
+    int isMatch;
+    int isFound=0;
+    char hdr_field[PARAM],hdr_value[CONTAINS];
+    /* clear contains and field */
+    memset(hdr_field,0,PARAM);
+    memset(hdr_value,0,CONTAINS);
+    char *mem[2];
+    mem[0]=hdr_field;
+    mem[1]=hdr_value;
+    /* split header string into field:value */
+    isMatch=get_substr(hdr,"^(.+)###(.+)$",2,mem,REG_EXTENDED);
+    if(!isMatch){
+	fprintf(stderr,"input header string is not being split by the header split regex...fatal\n");
+	return 0;		/* returning not found on error ??? */
     }
-    /* regfree(inr_regex); */
-    /* regfree(fnl_regex); */
-    /* regfree(regex); */
-    free(regex);
-    free(inr_regex);
-    free(fnl_regex);
-    return isfound;
+    
+    /* now we have heder field in hdr_field and value in hdr_value */
+
+    int i;
+    char contains[CONTAINS];
+    for(i=0;sigs[i];i++){
+
+	/* TODO: how about splitting signature into heder and contains and then fo processing?? */
+	
+	/* check if hdr_field is in signature string */
+	int isMatch = match_query(sigs[i],hdr_field,REG_ICASE);
+	if(!isMatch){
+	    /* sigs[i] does not have hdr_field */
+	    continue;
+	}
+	/* header field matched */
+	/* now get the "contains" value from the signatures */	
+	/* clear contains */
+	memset(contains,0,CONTAINS);
+	char *mem[1];		/* hidden from outer mem */
+	mem[0]=contains;
+	
+	isMatch=get_substr(sigs[i],"CONTAINS:\"(.+)\"",1,mem,REG_EXTENDED);
+	if(!isMatch){
+	    /* no match in get_substr */
+	    /* some error in sigs. because this is should always match */
+	    fprintf(stderr,"sigs did not match predef pattern\n");
+	    continue;
+	}
+	/* now we have the value of CONTAINS field in contains array*/
+	/* check if contains is present in header field's value */
+	
+	isMatch=match_query(hdr_value,contains,REG_ICASE);
+	if(!isMatch){
+	    /* "contains" not in header field's value*/
+	    continue;
+	}
+	/* "contains" in header field's value */
+	isFound=1;
+	break;
+    }
+    return isFound;
     
 }

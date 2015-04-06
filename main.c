@@ -10,7 +10,7 @@ int main(){
     char *sig_file_path="./docs/signatures.sig";
     char **sigs=parseSignatures(sig_file_path);
     /* example header string */
-    char *hdr="User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:12.0) Gecko/20100101 Firefox/21.0";
+    char *hdr="Mime-Tye### mim Mozilla/5.0 (X11; Linux x86_64; rv:12.0) Gecko/20100101 Firefox/21.0";
     if(header_allow(hdr,sigs)==0){ /* case insensitive */
 	printf("header allowed\n");
     }
