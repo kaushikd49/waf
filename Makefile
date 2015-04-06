@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-c -std=c99 -Wall
+CFLAGS=-c -g -std=c99 -Wall
 all: waf
 
 waf: main.o parse_sigs.o header_allow.o req_allow.o

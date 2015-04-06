@@ -12,17 +12,17 @@ int main(){
     /* example header string */
     char *hdr="User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:12.0) Gecko/20100101 Firefox/21.0";
     if(header_allow(hdr,sigs)){
-	printf("allowed\n");
+	printf("header allowed\n");
     }
     else{
-	printf("not allowed\n");
+	printf("header not allowed\n");
     }
-    char *req="User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:12.0) Gecko/20100101 Firefox/21.0";
-    if(header_allow(req,sigs)){
-	printf("allowed\n");
+    char *bod="GET /blah?foo=bar&k2=v2&k3=v3";
+    if(req_allow(bod,sigs)==0){
+	printf("req allowed\n");
     }
     else{
-	printf("not allowed\n");
+	printf("req not allowed\n");
     }
     int i=0;
     for(;sigs[i];i++){
