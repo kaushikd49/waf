@@ -11,19 +11,56 @@ int main(){
     char **sigs=parseSignatures(sig_file_path);
     /* example header string */
     char *hdr="User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:12.0) Gecko/20100101 Firefox/21.0";
-    if(header_allow(hdr,sigs)){
+    if(header_allow(hdr,sigs)==0){ /* case insensitive */
 	printf("header allowed\n");
     }
     else{
 	printf("header not allowed\n");
     }
-    char *bod="GET /blah?foo=bar&k2=v2&k3=v3";
+    /* req body should not have any string at the end after the 
+       last parameter's value. 
+       Either put \0 right after last parameter's value in the string 
+       before passing to req_allow or we can use a delimiter between 
+       last param's value and HTTP/1.1. I would suggest first option(\0) 
+       since int the URL specification a request string should not 
+       have anything after the last kv pair, and all kv pairs are 
+       seperated by &. so whitespace is counted as data */
+    
+    /* char *invalid_bod="GET /blah?foo=bar&k2=v2&k3=union HTTP/1.1"; */
+    /* HTTP/1.1 is counted as part of k3's value */
+    /* correct value */
+    
+    /* TEST CASE FOR PARAMETER <VALUE> AS WELL AS REQUEST METHOD */
+    char *bod="POST /blah?foo=bar&k2=v2&k3=v3"; /* correct request url */
     if(req_allow(bod,sigs)==0){
 	printf("req allowed\n");
     }
     else{
 	printf("req not allowed\n");
     }
+    /* TEST CASE FOR PARAMETER "*" */
+    char *bod_allparams="GET /blah?foo=bar&k2=union all select&k3=v2"; /* correct request url */
+    if(req_allow(bod_allparams,sigs)==0){
+	printf("req allowed\n");
+    }
+    else{
+	printf("req not allowed\n");
+    }
+    
+    /* TEST CASE FOR MULTIPLE RUNS "*" */
+    //char *bod_allparams="GET /blah?foo=bar&k2=union all select&k3=v2"; /* correct request url */
+    /* int j,ct=0; */
+    /* for(j=0;j<1000;j++){ */
+    /* 	if(req_allow(bod_allparams,sigs)==0){ */
+    /* 	    printf("req allowed\n"); */
+    /* 	} */
+    /* 	else{ */
+    /* 	    printf("req not allowed\n"); */
+    /* 	    ct++;	     */
+    /* 	} */
+    /* } */
+    /* printf("count is %d\n",ct); */
+
     int i=0;
     for(;sigs[i];i++){
 	free(sigs[i]);

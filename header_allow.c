@@ -4,6 +4,10 @@
 #include<regex.h>
 #define BUFSIZE 1024
 
+int match_query(char *str,char *pat,int flagse);
+
+int get_substr(char *str,char *pat,int n,char **mem,int flags);
+
 int header_allow(char *hdr,char **sigs){
     /* returns 0 on not-allowed */
     /* returns 1 on allowed */
@@ -21,8 +25,8 @@ int header_allow(char *hdr,char **sigs){
     regex=(regex_t *)malloc(sizeof(regex_t));
     inr_regex=(regex_t *)malloc(sizeof(regex_t));
     fnl_regex=(regex_t *)malloc(sizeof(regex_t));
-    strncpy(rx_string,"",BUFSIZE);
-    strncat(rx_string,token,BUFSIZE);
+    memset(rx_string,'\0',BUFSIZE);
+    strncpy(rx_string,token,BUFSIZE);
     printf("regex is %s,len is %d\n",rx_string,(int)strlen(rx_string));
     int reti; /* = regcomp(regex,rx_string,REG_ICASE); */
     int inr_reti,fnl_reti;
@@ -34,26 +38,15 @@ int header_allow(char *hdr,char **sigs){
     /* } */
     for(i=0;sigs[i] && !isfound;i++,regfree(inr_regex),regfree(fnl_regex),regfree(regex)){
 
-	/* Function: void regfree (regex_t *compiled)
-
-    Preliminary: | MT-Safe | AS-Unsafe heap | AC-Unsafe mem | See POSIX Safety Concepts.
-
-    Calling regfree frees all the storage that *compiled points to. This includes various internal fields of the regex_t structure that aren’t documented in this manual.
-
-    regfree does not free the object *compiled itself. 
-
-You should always free the space in a regex_t structure with regfree before using the structure to compile another regular expression.
-
-When regcomp or regexec reports an error, you can use the function regerror to turn it into an error message string.  */
-
-
-	/* regcomp structure->do regexec->regfree->regcomp structure */
-
     	//strncpy(buf,sig[i],strlen(sig[i])+1); /* clear buf */
+	/* match_query(rx_string) */
 	reti = regcomp(regex,rx_string,REG_ICASE);
 	if(reti){			/* retrns non zero for failure */
 	    fprintf(stderr,"could not compile regex\n");
 	    regfree(regex);
+	    free(regex);
+	    free(inr_regex);
+	    free(fnl_regex);
 	    return 0;
 	}
     	reti = regexec(regex,sigs[i],0,NULL,0);

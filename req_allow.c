@@ -6,12 +6,12 @@
 #define PARAM 100
 #define CONTAINS 500
 
-int match_query(char *str,char *pat){
+int match_query(char *str,char *pat,int flags){
     /* return 0 if not found */
     /* return 1 if found/match */
     regex_t regex;
     int isFound=0;
-    int reti=regcomp(&regex,pat,REG_EXTENDED);
+    int reti=regcomp(&regex,pat,flags);
     char msgbuf[BUFSIZE];
     if(reti){
 	fprintf(stderr,"could not compile regex\n");
@@ -23,7 +23,7 @@ int match_query(char *str,char *pat){
 	isFound=1;
     }
     else if(reti==REG_NOMATCH){
-	printf("No match\n");
+	/* printf("No match\n") */;
     }
     else{
 	regerror(reti,&regex,msgbuf,sizeof(msgbuf));
@@ -33,12 +33,12 @@ int match_query(char *str,char *pat){
     return isFound;
 }
 
-int get_substr(char *str,char *pat,int n,char **mem){
+int get_substr(char *str,char *pat,int n,char **mem,int flags){
     size_t ngroups=n+1;
     regmatch_t *groups=(regmatch_t *)malloc(ngroups*sizeof(regmatch_t));
     memset(groups,0,ngroups*sizeof(regmatch_t));
     regex_t regex;
-    int reti=regcomp(&regex,pat,REG_EXTENDED);
+    int reti=regcomp(&regex,pat,flags);
     char msgbuf[BUFSIZE];
     int isFound=0;
     if(reti){
@@ -62,7 +62,7 @@ int get_substr(char *str,char *pat,int n,char **mem){
 	}
     }
     else if(reti==REG_NOMATCH){
-	printf("No match\n");
+	/* printf("No match\n") */;
     }
     else{
 	regerror(reti,&regex,msgbuf,sizeof(msgbuf));
@@ -82,11 +82,11 @@ int req_allow(char *hdr,char **sigs){
     char *pat_post="REQUEST_METHOD:POST";
     /* check if get req */
     //char *pat_get="^GET";
-    int isGetReq=match_query(hdr,"^GET");
+    int isGetReq=match_query(hdr,"^GET",REG_EXTENDED);
 
     /* check if it post req */
     //char *pat_post="^POST";
-    int isPostReq=match_query(hdr,"^POST");
+    int isPostReq=match_query(hdr,"^POST",REG_EXTENDED);
 
     /* if not either post or get return allowed */
     if(!isGetReq && !isPostReq)
@@ -108,7 +108,7 @@ int req_allow(char *hdr,char **sigs){
 	pat=pat_post;
     for(i=0;sigs[i];i++){
 	/* for every sig which has REQUEST_METHOD: GET/POST*/
-	isMatch=match_query(sigs[i],pat);
+	isMatch=match_query(sigs[i],pat,REG_EXTENDED);
 	if(!isMatch){
 	    /* sig doesnt have pat */
 	    continue;
@@ -125,17 +125,17 @@ int req_allow(char *hdr,char **sigs){
 	    mem[0]=param;mem[1]=contains;
 	    /* 1 is expected num of substrings */
 	    /* mem is space for subtring for func to write into */
-	    int ret=get_substr(sigs[i],pat_substr,2,mem);
+	    int ret=get_substr(sigs[i],pat_substr,2,mem,REG_EXTENDED);
 	    /* now we have params and contains values */
 	    if(!ret){
 		/* no match in get_substr */
 		/* some error in sigs. because this is should always match */
-		printf("sigs did not match predef pattern\n");
+		fprintf(stderr,"sigs did not match predef pattern\n");
 		continue;
 	    }
 	    if(strcmp(param,"*")==0){
 		/* if param is \* then do a whole string search for contains */
-		int isMatch=match_query(hdr,contains);
+		int isMatch=match_query(hdr,contains,REG_EXTENDED);
 		if(!isMatch){
 		    /* no match */
 		    continue;
@@ -162,8 +162,8 @@ int req_allow(char *hdr,char **sigs){
 		strncat(temp,param,BUFSIZE);
 		strncat(temp,"=([^&]+)",BUFSIZE);
 		pat_substr_val=temp;
-		//char *pat_substr_val="\?.*"+param+"=([^&]+)"; /* verified */
-		int ret=get_substr(hdr,pat_substr_val,1,mem);
+		//char *pat_substr_val="\?.*"+param+"=([^ &]+)"; /* verified */
+		int ret=get_substr(hdr,pat_substr_val,1,mem,REG_EXTENDED);
 		if(!ret){
 		    /* no substring matched */
 		    continue;
@@ -172,7 +172,7 @@ int req_allow(char *hdr,char **sigs){
 		    /* we found the param in hdr */
 		    /* now check if val is present in contains */
 		    /* contains is the pattern */
-		    int isMatch=match_query(val,contains);
+		    int isMatch=match_query(val,contains,REG_EXTENDED);
 		    if(isMatch){
 			/* val is contained in contains */
 			/* reject this */
