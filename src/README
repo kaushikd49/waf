@@ -1,13 +1,13 @@
 WAF Project
 ######
 
-run:
+run sudo start.sh twice from src folder, otherwise segmentation fault
 
-$ make
-$ ./waf
+~/waf/src $ sudo start.sh
 
-Test cases present in main.c
-Header filter in header_allow.c
-Request filter in req_allow.c
-Signature file parser in parse_sigs.c
-Signature file in doc/signatures.sig
+
+To read logs,
+$ tail -f ~/ludapache/logs/error_log
+
+Req and header filter in utils.c
+Aapache module in mod_lud.c

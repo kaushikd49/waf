@@ -26,7 +26,7 @@
 #define DEFAULT_MODlud_STRING "mod_lud: Default HTTP Request Alert."
 #endif
 
-#include "/home/karthik/waf/teamsrc/waf.h"
+#include "/home/karthik/waf/src/waf.h"
 
 
 
@@ -44,7 +44,7 @@ modlud_config *s_cfg = ap_get_module_config(r->server->module_config, &lud_modul
 	fprintf(stderr,"%s\n",s_cfg->string);
 	char s[] = "adsad";
 	//fprintf(stderr,"%s\n",r->the_request);
-	char *sig_file_path="/home/karthik/waf/teamsrc/docs/signatures.sig";
+	char *sig_file_path="/home/karthik/waf/src/docs/signatures.sig";
 	fprintf(stderr,"therequest:%s\n",r->the_request);
 	const char * headerstr = apr_table_get(r->headers_in, "User-Agent");
 	char **sigs=parseSignatures(sig_file_path);

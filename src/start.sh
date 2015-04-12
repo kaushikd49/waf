@@ -1,3 +1,4 @@
+# run from src folder, otherwise segmentation fault
 ~/ludapache/bin/apxs -c -i -a ./mod_lud.c utils.c
 ~/ludapache/bin/apachectl stop
 ~/ludapache/bin/apachectl start
