@@ -1,0 +1,307 @@
+[Sun Mar 22 01:02:58 2015] [notice] Apache/2.2.27 (Unix) configured -- resuming normal operations
+[Sun Mar 22 01:03:10 2015] [notice] SIGHUP received.  Attempting to restart
+httpd: Could not reliably determine the server's fully qualified domain name, using 127.0.1.1 for ServerName
+[Sun Mar 22 01:03:10 2015] [notice] Apache/2.2.27 (Unix) configured -- resuming normal operations
+mod_lud: Default HTTP Request Alert.
+mod_lud: Default HTTP Request Alert.
+mod_lud: Default HTTP Request Alert.
+mod_lud: Default HTTP Request Alert.
+mod_lud: Default HTTP Request Alert.
+mod_lud: Default HTTP Request Alert.
+[Sun Mar 22 01:06:44 2015] [notice] SIGHUP received.  Attempting to restart
+httpd: Could not reliably determine the server's fully qualified domain name, using 127.0.1.1 for ServerName
+[Sun Mar 22 01:06:44 2015] [notice] Apache/2.2.27 (Unix) configured -- resuming normal operations
+mod_lud: Default HTTP Request Alert.
+mod_lud: Default HTTP Request Alert.
+[Sun Mar 22 02:01:46 2015] [notice] child pid 31260 exit signal Segmentation fault (11), possible coredump in /home/kaushik/ludapache
+[Sun Mar 22 02:01:47 2015] [notice] child pid 31259 exit signal Segmentation fault (11), possible coredump in /home/kaushik/ludapache
+[Sun Mar 22 02:01:49 2015] [notice] child pid 31257 exit signal Segmentation fault (11), possible coredump in /home/kaushik/ludapache
+[Sun Mar 22 02:01:52 2015] [notice] child pid 31258 exit signal Segmentation fault (11), possible coredump in /home/kaushik/ludapache
+[Sun Mar 22 02:01:56 2015] [notice] child pid 31261 exit signal Segmentation fault (11), possible coredump in /home/kaushik/ludapache
+[Sun Mar 22 02:02:02 2015] [notice] child pid 31461 exit signal Segmentation fault (11), possible coredump in /home/kaushik/ludapache
+[Sun Mar 22 02:03:02 2015] [notice] child pid 31463 exit signal Segmentation fault (11), possible coredump in /home/kaushik/ludapache
+[Sun Mar 22 02:03:03 2015] [notice] child pid 31465 exit signal Segmentation fault (11), possible coredump in /home/kaushik/ludapache
+[Sun Mar 22 02:03:05 2015] [notice] child pid 31467 exit signal Segmentation fault (11), possible coredump in /home/kaushik/ludapache
+[Sun Mar 22 02:03:09 2015] [notice] child pid 31469 exit signal Segmentation fault (11), possible coredump in /home/kaushik/ludapache
+[Sun Mar 22 02:05:15 2015] [notice] child pid 31471 exit signal Segmentation fault (11), possible coredump in /home/kaushik/ludapache
+[Sun Mar 22 02:05:16 2015] [notice] child pid 31599 exit signal Segmentation fault (11), possible coredump in /home/kaushik/ludapache
+[Sun Mar 22 02:05:18 2015] [notice] child pid 31602 exit signal Segmentation fault (11), possible coredump in /home/kaushik/ludapache
+[Sun Mar 22 02:05:58 2015] [notice] child pid 31601 exit signal Segmentation fault (11), possible coredump in /home/kaushik/ludapache
+[Sun Mar 22 02:06:00 2015] [notice] child pid 31606 exit signal Segmentation fault (11), possible coredump in /home/kaushik/ludapache
+[Sun Mar 22 02:06:02 2015] [notice] child pid 31735 exit signal Segmentation fault (11), possible coredump in /home/kaushik/ludapache
+[Sun Mar 22 02:06:05 2015] [notice] child pid 31738 exit signal Segmentation fault (11), possible coredump in /home/kaushik/ludapache
+[Sun Mar 22 02:06:09 2015] [notice] child pid 31737 exit signal Segmentation fault (11), possible coredump in /home/kaushik/ludapache
+[Sun Mar 22 02:07:16 2015] [notice] child pid 31867 exit signal Segmentation fault (11), possible coredump in /home/kaushik/ludapache
+[Sun Mar 22 02:07:17 2015] [notice] child pid 31870 exit signal Segmentation fault (11), possible coredump in /home/kaushik/ludapache
+[Sun Mar 22 02:07:58 2015] [notice] caught SIGWINCH, shutting down gracefully
+[Sun Mar 22 02:08:00 2015] [notice] seg fault or similar nasty error detected in the parent process
+[Sun Mar 22 02:08:06 2015] [notice] Apache/2.2.27 (Unix) configured -- resuming normal operations
+mod_lud: Default HTTP Request Alert.
+[Sun Mar 22 02:09:12 2015] [notice] caught SIGTERM, shutting down
+[Sun Mar 22 02:09:12 2015] [notice] seg fault or similar nasty error detected in the parent process
+[Sun Mar 22 02:09:14 2015] [notice] Apache/2.2.27 (Unix) configured -- resuming normal operations
+adsad
+adsad
+adsad
+adsad
+[Sun Mar 22 02:24:14 2015] [notice] caught SIGTERM, shutting down
+[Sun Mar 22 02:24:14 2015] [notice] seg fault or similar nasty error detected in the parent process
+[Sun Mar 22 02:24:16 2015] [notice] Apache/2.2.27 (Unix) configured -- resuming normal operations
+GET / HTTP/1.1
+GET / HTTP/1.1
+GET /abc HTTP/1.1
+[Sun Mar 22 02:25:33 2015] [error] [client ::1] File does not exist: /home/kaushik/ludapache/htdocs/abc
+GET /?abc=def HTTP/1.1
+[Sat Mar 28 22:21:35 2015] [notice] SIGHUP received.  Attempting to restart
+httpd: Could not reliably determine the server's fully qualified domain name, using 127.0.1.1 for ServerName
+[Sat Mar 28 22:21:35 2015] [notice] Apache/2.2.27 (Unix) configured -- resuming normal operations
+[Sat Mar 28 22:21:41 2015] [notice] caught SIGTERM, shutting down
+[Sat Mar 28 22:21:48 2015] [notice] Apache/2.2.27 (Unix) configured -- resuming normal operations
+GET /?abc=def HTTP/1.1
+[Sat Mar 28 22:46:38 2015] [notice] caught SIGTERM, shutting down
+[Sat Mar 28 22:46:38 2015] [notice] seg fault or similar nasty error detected in the parent process
+[Sat Mar 28 22:46:40 2015] [notice] Apache/2.2.27 (Unix) configured -- resuming normal operations
+(@ŠYø
+[Sat Mar 28 23:00:31 2015] [notice] caught SIGTERM, shutting down
+[Sat Mar 28 23:00:31 2015] [notice] seg fault or similar nasty error detected in the parent process
+[Sat Mar 28 23:00:32 2015] [notice] Apache/2.2.27 (Unix) configured -- resuming normal operations
+Wget/1.15 (linux-gnu)
+[Sat Mar 28 23:01:38 2015] [notice] caught SIGTERM, shutting down
+[Sat Mar 28 23:01:44 2015] [notice] Apache/2.2.27 (Unix) configured -- resuming normal operations
+therequest:GET /?abc=def HTTP/1.1
+header is:Wget/1.15 (linux-gnu)
+[Sat Mar 28 23:04:09 2015] [notice] caught SIGTERM, shutting down
+[Sun Mar 29 01:51:03 2015] [notice] Apache/2.2.27 (Unix) configured -- resuming normal operations
+therequest:GET / HTTP/1.1
+header is:Wget/1.15 (linux-gnu)
+therequest:GET / HTTP/1.1
+header is:Wget/1.15 (linux-gnu)
+[Sun Mar 29 01:53:24 2015] [notice] caught SIGTERM, shutting down
+[Sun Mar 29 01:53:24 2015] [notice] seg fault or similar nasty error detected in the parent process
+[Sun Mar 29 01:53:26 2015] [notice] Apache/2.2.27 (Unix) configured -- resuming normal operations
+therequest:GET / HTTP/1.1
+header is:Wget/1.15 (linux-gnu)
+therequest:GET / HTTP/1.1
+header is:Wget/1.15 (linux-gnu)
+[Sun Mar 29 01:54:41 2015] [notice] SIGHUP received.  Attempting to restart
+[Sun Mar 29 01:54:41 2015] [notice] seg fault or similar nasty error detected in the parent process
+[Sun Mar 29 01:55:04 2015] [warn] pid file /home/kaushik/ludapache/logs/httpd.pid overwritten -- Unclean shutdown of previous Apache run?
+[Sun Mar 29 01:55:04 2015] [notice] Apache/2.2.27 (Unix) configured -- resuming normal operations
+therequest:GET / HTTP/1.1
+header is:Wget/1.15 (linux-gnu)
+[Sun Mar 29 02:13:54 2015] [notice] child pid 2407 exit signal Segmentation fault (11), possible coredump in /home/kaushik/ludapache
+[Sun Mar 29 02:13:55 2015] [notice] child pid 2406 exit signal Segmentation fault (11), possible coredump in /home/kaushik/ludapache
+[Sun Mar 29 02:13:57 2015] [notice] child pid 2405 exit signal Segmentation fault (11), possible coredump in /home/kaushik/ludapache
+[Sun Mar 29 02:14:01 2015] [notice] SIGHUP received.  Attempting to restart
+[Sun Mar 29 02:14:01 2015] [notice] seg fault or similar nasty error detected in the parent process
+[Sun Mar 29 02:14:14 2015] [warn] pid file /home/kaushik/ludapache/logs/httpd.pid overwritten -- Unclean shutdown of previous Apache run?
+[Sun Mar 29 02:14:14 2015] [notice] Apache/2.2.27 (Unix) configured -- resuming normal operations
+therequest:GET /?foo=bar HTTP/1.1
+header is:Wget/1.15 (linux-gnu)
+therequest:GET /blah?foo=bar HTTP/1.1
+header is:Wget/1.15 (linux-gnu)
+therequest:GET /blah?foo=bar HTTP/1.1
+header is:Wget/1.15 (linux-gnu)
+[Sun Mar 29 02:31:53 2015] [notice] caught SIGTERM, shutting down
+[Sun Mar 29 02:31:57 2015] [notice] Apache/2.2.27 (Unix) configured -- resuming normal operations
+mod_lud: Default HTTP Request Alert.
+therequest:GET /blah?foo=bar HTTP/1.1
+header is:Wget/1.15 (linux-gnu)
+[Sun Mar 29 02:56:00 2015] [notice] caught SIGTERM, shutting down
+[Sun Mar 29 02:56:03 2015] [notice] Apache/2.2.27 (Unix) configured -- resuming normal operations
+mod_lud: Default HTTP Request Alert.
+therequest:GET /blah?foo=bar HTTP/1.1
+header is:Wget/1.15 (linux-gnu)
+[Sun Mar 29 03:29:42 2015] [notice] caught SIGTERM, shutting down
+[Sun Mar 29 03:29:46 2015] [notice] Apache/2.2.27 (Unix) configured -- resuming normal operations
+You need to put quotes around multiple words.
+therequest:GET / HTTP/1.1
+header is:Wget/1.15 (linux-gnu)
+[Sun Mar 29 03:30:25 2015] [notice] caught SIGTERM, shutting down
+[Sun Mar 29 03:30:27 2015] [notice] Apache/2.2.27 (Unix) configured -- resuming normal operations
+You need to put quotes around multiple words.
+therequest:GET / HTTP/1.1
+header is:Wget/1.15 (linux-gnu)
+[Sun Mar 29 03:30:42 2015] [notice] caught SIGTERM, shutting down
+[Sun Mar 29 03:30:44 2015] [notice] Apache/2.2.27 (Unix) configured -- resuming normal operations
+[Sun Mar 29 03:30:46 2015] [notice] SIGHUP received.  Attempting to restart
+httpd: Could not reliably determine the server's fully qualified domain name, using 127.0.1.1 for ServerName
+[Sun Mar 29 03:30:46 2015] [notice] Apache/2.2.27 (Unix) configured -- resuming normal operations
+why You need to put quotes around multiple words.
+therequest:GET / HTTP/1.1
+header is:Wget/1.15 (linux-gnu)
+[Sat Apr 11 21:06:44 2015] [warn] pid file /home/kaushik/ludapache/logs/httpd.pid overwritten -- Unclean shutdown of previous Apache run?
+[Sat Apr 11 21:06:44 2015] [notice] Apache/2.2.27 (Unix) configured -- resuming normal operations
+why You need to put quotes around multiple words.
+therequest:GET / HTTP/1.1
+header is:Wget/1.15 (linux-gnu)
+[Sat Apr 11 21:07:42 2015] [notice] SIGHUP received.  Attempting to restart
+[Sat Apr 11 21:07:42 2015] [notice] seg fault or similar nasty error detected in the parent process
+[Sat Apr 11 21:07:48 2015] [warn] pid file /home/kaushik/ludapache/logs/httpd.pid overwritten -- Unclean shutdown of previous Apache run?
+[Sat Apr 11 21:07:48 2015] [notice] Apache/2.2.27 (Unix) configured -- resuming normal operations
+why You need to put quotes around multiple words.
+therequest:GET / HTTP/1.1
+header is:Wget/1.15 (linux-gnu)
+why You need to put quotes around multiple words.
+therequest:GET / HTTP/1.1
+header is:Wget/1.15 (linux-gnu)
+why You need to put quotes around multiple words.
+therequest:GET /?abc=def HTTP/1.1
+header is:Wget/1.15 (linux-gnu)
+why You need to put quotes around multiple words.
+therequest:GET /wp-admin/post.php?post=1 HTTP/1.1
+header is:Wget/1.15 (linux-gnu)
+why You need to put quotes around multiple words.
+therequest:GET /index.php HTTP/1.1
+header is:Wget/1.15 (linux-gnu)
+[Sat Apr 11 21:13:05 2015] [notice] SIGHUP received.  Attempting to restart
+httpd: Could not reliably determine the server's fully qualified domain name, using 127.0.1.1 for ServerName
+[Sat Apr 11 21:13:05 2015] [notice] Apache/2.2.27 (Unix) configured -- resuming normal operations
+[Sat Apr 11 21:13:07 2015] [notice] SIGHUP received.  Attempting to restart
+httpd: Could not reliably determine the server's fully qualified domain name, using 127.0.1.1 for ServerName
+[Sat Apr 11 21:13:07 2015] [notice] Apache/2.2.27 (Unix) configured -- resuming normal operations
+[Sat Apr 11 21:13:09 2015] [notice] caught SIGTERM, shutting down
+[Sat Apr 11 21:13:13 2015] [notice] Apache/2.2.27 (Unix) configured -- resuming normal operations
+why You need to put quotes around multiple words.
+therequest:GET /?abc=def HTTP/1.1
+header is:Wget/1.15 (linux-gnu)
+[Sat Apr 11 21:16:55 2015] [notice] caught SIGTERM, shutting down
+[Sat Apr 11 21:17:49 2015] [notice] Apache/2.2.27 (Unix) configured -- resuming normal operations
+[Sat Apr 11 21:18:00 2015] [notice] caught SIGTERM, shutting down
+[Sat Apr 11 21:18:03 2015] [notice] Apache/2.2.27 (Unix) configured -- resuming normal operations
+why You need to put quotes around multiple words.
+therequest:GET / HTTP/1.1
+header is:Wget/1.15 (linux-gnu)
+why You need to put quotes around multiple words.
+therequest:GET / HTTP/1.1
+header is:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36
+why You need to put quotes around multiple words.
+therequest:GET /favicon.ico HTTP/1.1
+header is:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36
+[Sat Apr 11 21:20:13 2015] [notice] caught SIGTERM, shutting down
+[Sat Apr 11 21:20:22 2015] [notice] Apache/2.2.27 (Unix) configured -- resuming normal operations
+why You need to put quotes around multiple words.
+therequest:GET / HTTP/1.1
+header is:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36
+why You need to put quotes around multiple words.
+therequest:GET /favicon.ico HTTP/1.1
+header is:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36
+[Sat Apr 11 21:22:30 2015] [notice] caught SIGTERM, shutting down
+[Sat Apr 11 21:22:33 2015] [notice] Apache/2.2.27 (Unix) configured -- resuming normal operations
+mod_lud: Default HTTP Request Alert.
+therequest:GET / HTTP/1.1
+header is:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36
+mod_lud: Default HTTP Request Alert.
+therequest:GET /favicon.ico HTTP/1.1
+header is:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36
+mod_lud: Default HTTP Request Alert.
+therequest:GET / HTTP/1.1
+header is:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36
+mod_lud: Default HTTP Request Alert.
+therequest:GET /favicon.ico HTTP/1.1
+header is:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36
+mod_lud: Default HTTP Request Alert.
+therequest:GET / HTTP/1.1
+header is:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36
+mod_lud: Default HTTP Request Alert.
+therequest:GET /favicon.ico HTTP/1.1
+header is:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36
+[Sat Apr 11 21:24:31 2015] [notice] caught SIGTERM, shutting down
+[Sat Apr 11 21:25:36 2015] [notice] Apache/2.2.27 (Unix) configured -- resuming normal operations
+mod_lud: Default HTTP Request Alert.
+therequest:GET / HTTP/1.1
+header is:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36
+mod_lud: Default HTTP Request Alert.
+therequest:GET /favicon.ico HTTP/1.1
+header is:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36
+mod_lud: Default HTTP Request Alert.
+therequest:GET /wp-admin/post.php?post=1&action=edit HTTP/1.1
+header is:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36
+mod_lud: Default HTTP Request Alert.
+therequest:GET /favicon.ico HTTP/1.1
+header is:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36
+mod_lud: Default HTTP Request Alert.
+therequest:GET /wp-admin/post.php?post=1&action=edit HTTP/1.1
+header is:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36
+mod_lud: Default HTTP Request Alert.
+therequest:GET /favicon.ico HTTP/1.1
+header is:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36
+[Sat Apr 11 21:38:26 2015] [notice] caught SIGTERM, shutting down
+[Sat Apr 11 21:38:58 2015] [notice] Apache/2.2.27 (Unix) configured -- resuming normal operations
+mod_lud: Default HTTP Request Alert.
+therequest:GET /wp-admin/post.php?post=1&action=edit HTTP/1.1
+header is:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36
+mod_lud: Default HTTP Request Alert.
+therequest:GET /favicon.ico HTTP/1.1
+header is:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36
+mod_lud: Default HTTP Request Alert.
+therequest:GET / HTTP/1.1
+header is:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36
+[Sat Apr 11 21:39:17 2015] [notice] SIGHUP received.  Attempting to restart
+httpd: Could not reliably determine the server's fully qualified domain name, using 127.0.1.1 for ServerName
+[Sat Apr 11 21:39:17 2015] [notice] Apache/2.2.27 (Unix) configured -- resuming normal operations
+mod_lud: Default HTTP Request Alert.
+therequest:GET / HTTP/1.1
+header is:Wget/1.15 (linux-gnu)
+mod_lud: Default HTTP Request Alert.
+therequest:GET /wp-admin/post.php?post=1&action=edit HTTP/1.1
+header is:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36
+mod_lud: Default HTTP Request Alert.
+therequest:GET /favicon.ico HTTP/1.1
+header is:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36
+mod_lud: Default HTTP Request Alert.
+therequest:GET / HTTP/1.1
+header is:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36
+mod_lud: Default HTTP Request Alert.
+therequest:GET / HTTP/1.1
+header is:Wget/1.15 (linux-gnu)
+mod_lud: Default HTTP Request Alert.
+therequest:GET / HTTP/1.1
+header is:Wget/1.15 (linux-gnu)
+mod_lud: Default HTTP Request Alert.
+therequest:GET / HTTP/1.1
+header is:Wget/1.15 (linux-gnu)
+[Sat Apr 11 21:41:53 2015] [notice] caught SIGTERM, shutting down
+[Sat Apr 11 21:42:23 2015] [notice] Apache/2.2.27 (Unix) configured -- resuming normal operations
+mod_lud: Default HTTP Request Alert.
+[Sat Apr 11 21:42:39 2015] [error] [client 10.0.2.2] File does not exist: /home/kaushik/ludapache/htdocs/favicon.ico
+mod_lud: Default HTTP Request Alert.
+[Sat Apr 11 21:43:19 2015] [error] [client 10.0.2.2] File does not exist: /home/kaushik/ludapache/htdocs/abc
+[Sat Apr 11 21:47:49 2015] [notice] caught SIGTERM, shutting down
+[Sat Apr 11 21:48:02 2015] [notice] Apache/2.2.27 (Unix) configured -- resuming normal operations
+mod_lud: Default HTTP Request Alert.
+therequest:GET / HTTP/1.1
+header is:Wget/1.15 (linux-gnu)
+mod_lud: Default HTTP Request Alert.
+therequest:GET / HTTP/1.1
+header is:Wget/1.15 (linux-gnu)
+mod_lud: Default HTTP Request Alert.
+therequest:GET / HTTP/1.1
+header is:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36
+[Sat Apr 11 21:50:37 2015] [notice] caught SIGTERM, shutting down
+[Sat Apr 11 21:53:25 2015] [notice] Apache/2.2.27 (Unix) configured -- resuming normal operations
+mod_lud: Default HTTP Request Alert.
+therequest:GET / HTTP/1.1
+header is:Wget/1.15 (linux-gnu)
+mod_lud: Default HTTP Request Alert.
+therequest:GET /foo HTTP/1.1
+header is:Wget/1.15 (linux-gnu)
+mod_lud: Default HTTP Request Alert.
+therequest:GET /foo?abc=def&ghi=wer%20yguyg%20hi HTTP/1.1
+header is:Wget/1.15 (linux-gnu)
+mod_lud: Default HTTP Request Alert.
+therequest:GET /foo/goog/sdasf/wer/wer/?abc=def&ghi=wer%20yguyg%20hi HTTP/1.1
+header is:Wget/1.15 (linux-gnu)
+[Sat Apr 11 21:56:53 2015] [notice] caught SIGTERM, shutting down
+[Sat Apr 11 21:56:56 2015] [notice] Apache/2.2.27 (Unix) configured -- resuming normal operations
+mod_lud: Default HTTP Request Alert.
+therequest:GET / HTTP/1.1
+header is:Wget/1.15 (linux-gnu)
+[Sat Apr 11 21:57:28 2015] [notice] caught SIGTERM, shutting down
+[Sat Apr 11 21:57:57 2015] [notice] Apache/2.2.27 (Unix) configured -- resuming normal operations
+mod_lud: Default HTTP Request Alert.
+therequest:GET / HTTP/1.1
+header is:Wget/1.15 (linux-gnu)
+mod_lud: Default HTTP Request Alert.
+therequest:GET / HTTP/1.1
+header is:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36
