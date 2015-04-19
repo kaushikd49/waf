@@ -7,13 +7,13 @@
 
 void add_details_to_page(char* ,char* ,char* );
 int get_page_index(char*);
+int get_param_index(int,char*);
 void initialize_pages();
 void create_profile();
 void store_data();
 void test_page_content();
 void get_lhs_and_rhs(char* ,char* ,char* );
 float standard_deviation(float[],float,int);
-
 struct url_params{
 	int max_parameters;
 	double max_val;
@@ -51,6 +51,9 @@ typedef struct page Page;
 
 Page page_arr[1000];
 
+typedef enum {max,avg,char_val,sd} mode;
+int is_url_valid(char*,mode);
+
 int main(){
 	initialize_pages();
 	// char *s = malloc(3000);
@@ -65,14 +68,46 @@ int main(){
 	char* line = NULL;
 	ssize_t read;
 	ssize_t len = 0;
-	
+
 
 	while((read = getline(&line,&len,fp)) != -1){
 		store_data(line);
 		// //printf("------\n");
 	}
 	// free(s);
-	test_page_content();
+	char url[100] = "/index.html?foo=bars&k1=21&k2=2";
+	printf("My char set = %s\n",url);
+	mode m = max;
+	printf("Testing Max\n");
+	int drop = is_url_valid(url,m);
+	if(drop != 0){
+		printf("Url is dropped!!!\n");
+	}else{
+		printf("Url Not dropped\n");
+	}
+	printf("--------------------------------\n");
+	printf("Testing Avg\n");
+	drop = is_url_valid(url,avg);
+	if(drop != 0){
+		printf("Url is dropped!!!\n");
+	}else{
+		printf("Url Not dropped\n");
+	}
+	printf("Testing SD \n");
+	drop = is_url_valid(url,sd);
+	if(drop != 0){
+		printf("Url is dropped!!!\n");
+	}else{
+		printf("Url Not dropped\n");
+	}
+	printf("--------------------------------\n");
+	drop = is_url_valid(url,char_val);
+	if(drop != 0){
+		printf("Url is dropped!!!\n");
+	}else{
+		printf("Url Not dropped\n");
+	}
+	//test_page_content();
 	fclose(fp);
 }
 
@@ -96,7 +131,7 @@ void test_page_content(){
 					parameters *p;
 					p = page_var.param[j];
 					printf("Printing Url Parameters for this \n");
-	
+
 					printf("Name %s\n",p->name);
 					printf("Max Value %f\n",p->max_val);
 					printf("Min value %f\n",p->min_val);
@@ -117,12 +152,12 @@ void test_page_content(){
 					printf("Sd %f\n",p->sd);
 					printf("\n\n-------xxxxxxx--------\n\n");
 				}
-			
+
 			}
 			printf("--------------------------------------------------\n");
-			
+
 		}
-		
+
 	}
 }
 
@@ -140,7 +175,7 @@ void store_data(char* line){
 			strcpy(status,token);
 			// //printf("[store_data] Status = %s\n",status);
 		}
-		
+
 		if(index == 3){
 			name = malloc(strlen(token)*sizeof(char));
 			strcpy(name,token);
@@ -158,7 +193,7 @@ void store_data(char* line){
 			strcpy(protocol,token);
 			// //printf("[store_data] Protocol = %s\n",protocol);
 			// //printf("[After Protocol change]Index accessed = %d and url = %s\n",index,url);
-			
+
 		}
 		// //printf("Index accessed = %d and url = %s\n",index,url);
 		token = strtok_r(NULL,DELIMITER,&place_holder);
@@ -173,7 +208,21 @@ void store_data(char* line){
 
 	// free(token);
 }
-
+int get_param_index(int page_index,char* name){
+	Page page_var = page_arr[page_index];
+	int index = -1;
+	int j =0;
+	for(j=0;j<2048;j++){
+		if(page_var.param[j]){
+			parameters *p = page_var.param[j];
+			if(strcmp(p->name,name) == 0){
+				index = j;
+				break;
+			}
+		}
+	}
+	return index;
+}
 int get_page_index(char *name){
 	int index = -1;
 	int i;
@@ -189,7 +238,7 @@ int get_page_index(char *name){
 
 	}
 	return index;
-	
+
 }
 
 void get_parameter_obj(char* url,int page_index){
@@ -200,7 +249,7 @@ void get_parameter_obj(char* url,int page_index){
 
 	int param_index = 0;
 	int j;
-	
+
 	char* place_holder = malloc(sizeof(char));
 
 	char *p = malloc(strlen(url)*sizeof(char));
@@ -211,13 +260,13 @@ void get_parameter_obj(char* url,int page_index){
 		p++;
 
 	//printf("[get_parameter_obj] Value = %s\n",p);
-	
+
 	char* token1 = malloc(strlen(url)*sizeof(char));
 	token1 = strtok_r(p,"&",&place_holder);
 
 	while(token1 != NULL){
 		//printf("[get_parameter_obj] Token = ~~ %s\n",token1);
-		
+
 		if(strstr(token1,"=") != NULL){
 			//printf("[get_parameter_obj] Token = %s\n",token1);
 			char* lhs = malloc(strlen(token1)*sizeof(char));
@@ -240,14 +289,14 @@ void get_parameter_obj(char* url,int page_index){
 					//printf("Token already exists this%s\n",token1);
 
 					break;
-					
+
 				}
 				if(page_var->param[j] == NULL){
 					//printf("Enters here atleast !!\n");
 					page_var->param[j] = malloc(sizeof(parameters));
 					parameters *param_ptr;
 					param_ptr = page_var->param[j];
-					
+
 					param_ptr->max_val = 0;
 					param_ptr->min_val = 0;
 					param_ptr->count = 0;
@@ -265,7 +314,7 @@ void get_parameter_obj(char* url,int page_index){
 				}
 
 			}
-		
+
 
 		}
 
@@ -273,10 +322,10 @@ void get_parameter_obj(char* url,int page_index){
 		//printf("[get_parameter_obj] Next Token = ~~ %s\n",token1);
 
 	}
-	
+
 	free(token1);
 	free(place_holder);
-		// free(p);
+	// free(p);
 }
 
 void populate_min_max_avg(char* input,parameters* p){
@@ -288,7 +337,7 @@ void populate_min_max_avg(char* input,parameters* p){
 	char* place_holder = malloc(sizeof(char));
 
 	// //printf("Value changed = %s\n",s);
-	
+
 	//printf("[populate_min_max_avg] Input = %s\n",input);
 	char* new_input = malloc((strlen(input)+1)*sizeof(char));
 	strcpy(new_input,input);
@@ -300,8 +349,8 @@ void populate_min_max_avg(char* input,parameters* p){
 	token = strtok_r(new_input,",",&place_holder);
 
 
-	
-	
+
+
 	while(token != NULL){
 		float x = atof(token);
 
@@ -314,7 +363,7 @@ void populate_min_max_avg(char* input,parameters* p){
 			minVal = x<minVal?x:minVal;
 			total += x;
 		}
-		
+
 		if (x != 0.0){
 			//printf("Valid float\n");
 			p->valid_input[count%100] = x;
@@ -323,17 +372,17 @@ void populate_min_max_avg(char* input,parameters* p){
 			p->valid_chars[p->char_count] = malloc(sizeof(token)*sizeof(char));
 			strcpy(p->valid_chars[p->char_count],token);
 			p->char_count += 1;
-			printf("not Valid float %s\n",token);
+			//printf("not Valid float %s\n",token);
 		}
 
 		// //printf("Float value = %f\n",x);
 		// //printf("Token = %s\n",token);
 		token = strtok_r(NULL,",",&place_holder);
-		
+
 
 	}
 
-	
+
 	//printf("Standard deviation = %f\n",p->sd);
 
 	float avg = total/count;
@@ -345,7 +394,7 @@ void populate_min_max_avg(char* input,parameters* p){
 	p->min_val = minVal;
 	p->avg = avg;
 	p->sd = standard_deviation(p->valid_input,avg,count);
-	free(place_holder);
+	free(place_holder);	
 
 }
 
@@ -451,14 +500,136 @@ int number_of_values(char* p){
 
 float standard_deviation(float data[],float mean, int n)
 {
-    int i=0;
-    float sum_deviation = 0;
-    // printf("[standard_deviation] Count = %d\n",n);
-    // printf("[standard_deviation] Mean = %f\n",mean);
-    for(i=0; i<n;++i){
-    	// printf("data  = %f \n",data[i]);
-    	sum_deviation+=(data[i]-mean)*(data[i]-mean);
-    }
+	int i=0;
+	float sum_deviation = 0;
+	// printf("[standard_deviation] Count = %d\n",n);
+	// printf("[standard_deviation] Mean = %f\n",mean);
+	for(i=0; i<n;++i){
+		// printf("data  = %f \n",data[i]);
+		sum_deviation+=(data[i]-mean)*(data[i]-mean);
+	}
 
-    return sqrt(sum_deviation/n);           
+	return sqrt(sum_deviation/n);           
+}
+int is_url_valid(char *url, mode m){
+	
+	char backup[2048];// = malloc(sizeof(url)*sizeof(char));
+	strcpy(backup,url);
+
+	char *name = NULL;
+	char *params = NULL;
+	char* token = malloc(sizeof(url)*sizeof(char));
+	char* place_holder = malloc(sizeof(char));	
+	token = strtok_r(url,"?",&place_holder);
+	//printf("Value of url = %s\n",url);
+	while(token != NULL){
+		if(name == NULL){
+			name = malloc(sizeof(token)*sizeof(char));
+			strcpy(name,token);
+		}else{
+			params = malloc(sizeof(token)*sizeof(char));
+			strcpy(params,token);
+		}
+		token = strtok_r(NULL,"?",&place_holder);
+	}
+
+	//printf("Value of params = %s\n",params);
+	int page_index=get_page_index(name);
+	Page page_var = page_arr[page_index];
+	//printf("Index val = %d\n",page_index);
+	//printf("Value of name = %s\n",page_var.name);
+
+	char* new_place_holder = malloc(sizeof(char));
+	char* param_token = malloc(sizeof(params)*sizeof(char));
+	param_token = strtok_r(params,"&",&new_place_holder);
+	int invalid = 0;
+	while(param_token != NULL && invalid == 0){
+		char *key = NULL;
+		char *value = NULL;
+		char* value_token = malloc(sizeof(param_token)*sizeof(char));
+		char *key_ph = malloc(sizeof(char));
+		value_token = strtok_r(param_token,"=",&key_ph);
+		while(value_token != NULL){
+			if(key == NULL){
+				key = malloc(sizeof(value_token));
+				strcpy(key,value_token);
+				//printf("Key == %s\n",key);
+			}else if(value == NULL){
+				value = malloc(sizeof(value_token));
+				strcpy(value,value_token);
+				//printf("Value == %s\n",value);
+			}
+			value_token = strtok_r(NULL,"=",&key_ph);
+		}
+		int param_index = get_param_index(page_index,key);
+		//printf("Param index found = %d\n",param_index);
+		if(param_index == -1){
+			invalid = -1;
+			break;
+		}
+		parameters *p = page_var.param[param_index];	
+		if(m == max){
+			//printf("1Comes here\n");
+			float _value = atof(value);
+			//printf("%f\n",_value);
+			//printf("1Comes here %s\n",value);
+			//printf("1Is %f grater than %f for key = %s\n",_value,p->max_val,key);
+			if(_value > p->max_val){
+				//printf("1Inavlid because of Max params\n");
+				invalid = -1;
+				break;
+			}
+		}else if(m == sd){
+			float _value = atof(value);
+			//printf("2Is %f grater than %f for key = %s\n",_value,p->sd,key);
+			if(_value > 3*p->sd || _value < 3*p->sd){
+				//printf("2Inavlid because of SD params\n");
+				invalid = -1;
+				break;
+			}
+			//printf("2sd mode selected \n");
+
+		}else if(m == avg){
+			float _value = atof(value);
+			//printf("3Is %f grater than %f for key = %s\n",_value,p->avg,key);
+			if(_value > p->avg){
+				//printf("3 Invalid because of avg param\n");
+				invalid = -1;
+				break;
+			}
+
+		}else{
+			float _value = atof(value);
+			int count = p->count;
+			int found =0;
+			int i=0;
+			for(i=0;i<count;i++){
+				float f = p->valid_input[i];
+				//printf("Valid float = %f \n",p->valid_input[i]);
+				if(f == _value){
+					found = 1;
+					break;
+				}
+			}
+			int char_count = p->char_count;
+			for(i=0;i<char_count;i++){
+				//printf("Valid chars = %s \n",p->valid_chars[i]);
+				if(strcmp(p->valid_chars[i],value)==0){
+					found = 1;
+					break;
+				}
+			}
+			invalid = found == 0?-1:0;
+			//printf("4Invalid or Valid because of char set\n");
+		}
+		param_token = strtok_r(NULL,"&",&new_place_holder);
+	}
+
+	strcpy(url,backup);
+//	free(backup);
+	free(name);
+	free(params);
+	free(token);
+	free(place_holder);
+	return invalid;
 }
