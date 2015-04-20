@@ -1,63 +1,41 @@
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-
-#define DELIMITER "@@@###"
-
-void add_details_to_page(char* ,char* ,char* );
-int get_page_index(char*);
-int get_param_index(int,char*);
-void initialize_pages();
-void create_profile();
-void store_data();
-void test_page_content();
-void get_lhs_and_rhs(char* ,char* ,char* );
-float standard_deviation(float[],float,int);
-struct url_params{
-	int max_parameters;
-	double max_val;
-	double min_val;
-	double avg;
-	int count;
-	int char_count;
-	double sd;
-	char input_type;
-	// double number_of_paramters;
-	char *name;
-	float valid_input[100];
-	char *valid_chars[100];
-};
-typedef struct url_params parameters;
-struct page{
-	parameters *param[2048];
-	// char* client_ip;
-	// char* local_ip;
-	char* protocol[5];
-	double time_served[2048];
-	char name[1000];
-	double keep_alive_requests[2048];
-	char* status[4];
-	double bytes_sent[2048];
-	double bytes_received[2048];
-	double bytes_transferred[2048];
-	int used;
-};
-
-void populate_min_max_avg(char* ,parameters*);
-void get_parameter_obj(char* ,int );
-
-typedef struct page Page;
-
-Page page_arr[1000];
-
-typedef enum {max,avg,char_val,sd} mode;
-int is_url_valid(char*,mode);
+#include "waf.h"
 
 int main(){
-	initialize_pages();
-	// char *s = malloc(3000);
-	FILE *fp;
+
+    char *sig_file_path="/home/karthik/waf/src/docs/signatures.sig";
+    char *req="GET /?fahsdf=dsafasd HTTP/1.1";
+    fprintf(stderr,"therequest:%s\n",req);
+    /* const char * headerstr = apr_table_get(r->headers_in, "User-Agent"); */
+    const char * headerstr = "Mozilla/5.0 (X11; Linux x86_64; rv:12.0) Gecko/20100101 Firefox/21.0";
+    char **sigs=parseSignatures(sig_file_path);
+    
+    /* int i=0; */
+	/* for(;sigs[i];i++){ */
+	/*     fprintf(stderr, "sigs is:%s\n",sigs[i]); */
+	/* } */
+/* header filter */
+    char buffer[BUFSIZE];
+    strncpy(buffer,"User-Agent###",BUFSIZE);
+    strncat(buffer,headerstr,BUFSIZE);
+    /* fprintf(stderr,"->->%s\n",buffer); */
+    if(header_allow(buffer,sigs)==0){ /* case insensitive */
+	fprintf(stderr,"header allowed\n");
+    }
+    else{
+	/* printf("header not allowed\n"); */
+	fprintf(stderr,"header not allowed\n");
+    }
+/* request filter */
+    if(req_allow(req,sigs)==0){
+	fprintf(stderr,"req allowed\n");
+    }
+    else{
+	fprintf(stderr,"req not allowed\n");
+    }
+    
+    initialize_pages();
+    // char *s = malloc(3000);
+    FILE *fp;
 
 	fp = fopen("access_waf.log","r");
 	if(fp == NULL){
@@ -74,7 +52,7 @@ int main(){
 		store_data(line);
 		// //printf("------\n");
 	}
-	// free(s);
+	// // free(s);
 	char url[100] = "/index.html?foo=bars&k1=21&k2=2";
 	printf("My char set = %s\n",url);
 	mode m = max;
@@ -201,44 +179,12 @@ void store_data(char* line){
 	}
 
 	add_details_to_page(protocol,name,url);
-	free(status);
-	free(protocol);
-	free(name);
-	free(url);
+	// free(status);
+	// free(protocol);
+	// free(name);
+	// free(url);
 
-	// free(token);
-}
-int get_param_index(int page_index,char* name){
-	Page page_var = page_arr[page_index];
-	int index = -1;
-	int j =0;
-	for(j=0;j<2048;j++){
-		if(page_var.param[j]){
-			parameters *p = page_var.param[j];
-			if(strcmp(p->name,name) == 0){
-				index = j;
-				break;
-			}
-		}
-	}
-	return index;
-}
-int get_page_index(char *name){
-	int index = -1;
-	int i;
-	for(i=0;i<1000;i++){
-		index = i;
-		if(page_arr[i].used == 0){
-			break;
-		}
-
-		if(strcmp(name,page_arr[i].name) == 0){
-			break;
-		}
-
-	}
-	return index;
-
+	// // free(token);
 }
 
 void get_parameter_obj(char* url,int page_index){
@@ -323,9 +269,9 @@ void get_parameter_obj(char* url,int page_index){
 
 	}
 
-	free(token1);
-	free(place_holder);
-	// free(p);
+	// free(token1);
+	// free(place_holder);
+	// // free(p);
 }
 
 void populate_min_max_avg(char* input,parameters* p){
@@ -394,7 +340,7 @@ void populate_min_max_avg(char* input,parameters* p){
 	p->min_val = minVal;
 	p->avg = avg;
 	p->sd = standard_deviation(p->valid_input,avg,count);
-	free(place_holder);	
+	// free(place_holder);	
 
 }
 
@@ -626,10 +572,46 @@ int is_url_valid(char *url, mode m){
 	}
 
 	strcpy(url,backup);
-//	free(backup);
-	free(name);
-	free(params);
-	free(token);
-	free(place_holder);
+//	// free(backup);
+	// free(name);
+	// free(params);
+	// free(token);
+	// free(place_holder);
 	return invalid;
+}
+
+
+int get_param_index(int page_index,char* name){
+	Page page_var = page_arr[page_index];
+	int index = -1;
+	int j =0;
+	for(j=0;j<2048;j++){
+		if(page_var.param[j]){
+			parameters *p = page_var.param[j];
+			if(strcmp(p->name,name) == 0){
+				index = j;
+				break;
+			}
+		}
+	}
+	return index;
+}
+
+
+int get_page_index(char *name){
+	int index = -1;
+	int i;
+	for(i=0;i<1000;i++){
+		index = i;
+		if(page_arr[i].used == 0){
+			break;
+		}
+
+		if(strcmp(name,page_arr[i].name) == 0){
+			break;
+		}
+
+	}
+	return index;
+
 }
