@@ -74,3 +74,5 @@ float standard_deviation(float[],float,int);
 int is_url_valid(char*,mode);
 int get_page_index(char*);
 int get_param_index(int,char*);
+
+void * my_malloc(size_t sz);

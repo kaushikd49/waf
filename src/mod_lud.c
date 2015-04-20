@@ -41,6 +41,7 @@ static int mod_lud_method_handler (request_rec *r)
 {
     modlud_config *s_cfg = ap_get_module_config(r->server->module_config, &lud_module);
     
+    fprintf(stderr,"hello\n");
 	fprintf(stderr,"%s\n",s_cfg->string);
 	char s[] = "adsad";
 	//fprintf(stderr,"%s\n",r->the_request);
@@ -73,13 +74,44 @@ static int mod_lud_method_handler (request_rec *r)
 	    fprintf(stderr,"req not allowed\n");
 	}
 	
+	fprintf(stderr,"hello ini\n");
+	initialize_pages();
+	// char *s = malloc(3000);
+	FILE *fp;
+	
+	fp = fopen("/home/karthik/waf/src/access_waf.log","r");
+	if(fp == NULL){
+	    fprintf(stderr,"Couldnot open the file. EXITING\n");
+	    exit(0);
+	}
+	// const char delim[10] = DELIMITER;
+	char* line = NULL;
+	ssize_t read;
+	ssize_t len = 0;
+	
+	
+	while((read = getline(&line,&len,fp)) != -1){
+	    store_data(line);
+	    // //printf("------\n");
+	}
+	
 	char url[100] = "/index.html?foo=bars&k1=21&k2=2";
+	
+	/* char *x=(char *)malloc(sizeof(char)*2000); */
+	/* char *temp=(char *)malloc(sizeof(char)*1000); */
+
+	
+	/* fprintf(stderr,"url -> %s\n",strtok_r(url,"?",&temp)); */
+
+	/* fprintf(stderr,"url -> %s\n",strtok_r(NULL,"?",&temp)); */
+
+	fprintf(stderr,"test\n");
 	mode m=max;
 	int drop=is_url_valid(url,m);
 	if(drop != 0){
-		printf("Url is dropped!!!\n");
+	    fprintf(stderr,"Url is dropped!!!\n");
 	}else{
-		printf("Url Not dropped\n");
+	    fprintf(stderr,"Url Not dropped\n");
 	}
 	fflush(stderr);
 	return DECLINED;
@@ -132,128 +164,3 @@ module AP_MODULE_DECLARE_DATA lud_module =
 	mod_lud_cmds,
 	mod_lud_register_hooks,
 };
-
-
-
-int is_url_valid(char *url, mode m){
-	
-	char backup[2048];// = malloc(sizeof(url)*sizeof(char));
-	strcpy(backup,url);
-
-	char *name = NULL;
-	char *params = NULL;
-	char* token = malloc(sizeof(url)*sizeof(char));
-	char* place_holder = malloc(sizeof(char));	
-	token = strtok_r(url,"?",&place_holder);
-	//printf("Value of url = %s\n",url);
-	while(token != NULL){
-		if(name == NULL){
-			name = malloc(sizeof(token)*sizeof(char));
-			strcpy(name,token);
-		}else{
-			params = malloc(sizeof(token)*sizeof(char));
-			strcpy(params,token);
-		}
-		token = strtok_r(NULL,"?",&place_holder);
-	}
-
-	//printf("Value of params = %s\n",params);
-	int page_index=get_page_index(name);
-	Page page_var = page_arr[page_index];
-	//printf("Index val = %d\n",page_index);
-	//printf("Value of name = %s\n",page_var.name);
-
-	char* new_place_holder = malloc(sizeof(char));
-	char* param_token = malloc(sizeof(params)*sizeof(char));
-	param_token = strtok_r(params,"&",&new_place_holder);
-	int invalid = 0;
-	while(param_token != NULL && invalid == 0){
-		char *key = NULL;
-		char *value = NULL;
-		char* value_token = malloc(sizeof(param_token)*sizeof(char));
-		char *key_ph = malloc(sizeof(char));
-		value_token = strtok_r(param_token,"=",&key_ph);
-		while(value_token != NULL){
-			if(key == NULL){
-				key = malloc(sizeof(value_token));
-				strcpy(key,value_token);
-				//printf("Key == %s\n",key);
-			}else if(value == NULL){
-				value = malloc(sizeof(value_token));
-				strcpy(value,value_token);
-				//printf("Value == %s\n",value);
-			}
-			value_token = strtok_r(NULL,"=",&key_ph);
-		}
-		int param_index = get_param_index(page_index,key);
-		//printf("Param index found = %d\n",param_index);
-		if(param_index == -1){
-			invalid = -1;
-			break;
-		}
-		parameters *p = page_var.param[param_index];	
-		if(m == max){
-			//printf("1Comes here\n");
-			float _value = atof(value);
-			//printf("%f\n",_value);
-			//printf("1Comes here %s\n",value);
-			//printf("1Is %f grater than %f for key = %s\n",_value,p->max_val,key);
-			if(_value > p->max_val){
-				//printf("1Inavlid because of Max params\n");
-				invalid = -1;
-				break;
-			}
-		}else if(m == sd){
-			float _value = atof(value);
-			//printf("2Is %f grater than %f for key = %s\n",_value,p->sd,key);
-			if(_value > 3*p->sd || _value < 3*p->sd){
-				//printf("2Inavlid because of SD params\n");
-				invalid = -1;
-				break;
-			}
-			//printf("2sd mode selected \n");
-
-		}else if(m == avg){
-			float _value = atof(value);
-			//printf("3Is %f grater than %f for key = %s\n",_value,p->avg,key);
-			if(_value > p->avg){
-				//printf("3 Invalid because of avg param\n");
-				invalid = -1;
-				break;
-			}
-
-		}else{
-			float _value = atof(value);
-			int count = p->count;
-			int found =0;
-			int i=0;
-			for(i=0;i<count;i++){
-				float f = p->valid_input[i];
-				//printf("Valid float = %f \n",p->valid_input[i]);
-				if(f == _value){
-					found = 1;
-					break;
-				}
-			}
-			int char_count = p->char_count;
-			for(i=0;i<char_count;i++){
-				//printf("Valid chars = %s \n",p->valid_chars[i]);
-				if(strcmp(p->valid_chars[i],value)==0){
-					found = 1;
-					break;
-				}
-			}
-			invalid = found == 0?-1:0;
-			//printf("4Invalid or Valid because of char set\n");
-		}
-		param_token = strtok_r(NULL,"&",&new_place_holder);
-	}
-
-	strcpy(url,backup);
-//	free(backup);
-	free(name);
-	free(params);
-	free(token);
-	free(place_holder);
-	return invalid;
-}
