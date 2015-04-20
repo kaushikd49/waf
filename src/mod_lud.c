@@ -95,23 +95,54 @@ static int mod_lud_method_handler (request_rec *r)
 	    // //printf("------\n");
 	}
 	
-	char url[100] = "/index.html?foo=bars&k1=21&k2=2";
+	/* char url[100] = "/index.html?foo=bars&k1=21&k2=2"; */
 	
-	/* char *x=(char *)malloc(sizeof(char)*2000); */
-	/* char *temp=(char *)malloc(sizeof(char)*1000); */
-
+	char *temp=my_malloc(sizeof(char)*2000);
+	char *url=strtok_r(r->the_request," ",&temp);
+	url=strtok_r(NULL," ",&temp);
+	fprintf(stderr,"url passed is ->%s\n",url);
 	
 	/* fprintf(stderr,"url -> %s\n",strtok_r(url,"?",&temp)); */
 
 	/* fprintf(stderr,"url -> %s\n",strtok_r(NULL,"?",&temp)); */
-
-	fprintf(stderr,"test\n");
+	char *y1=my_malloc(1000);
+	strcpy(y1,url);
 	mode m=max;
-	int drop=is_url_valid(url,m);
+	int drop=is_url_valid(y1,m);
 	if(drop != 0){
-	    fprintf(stderr,"Url is dropped!!!\n");
+	    fprintf(stderr,"MAX->Url is dropped!!!\n");
 	}else{
-	    fprintf(stderr,"Url Not dropped\n");
+	    fprintf(stderr,"MAX->Url Not dropped\n");
+	}
+	
+	y1=my_malloc(1000);
+	strcpy(y1,url);
+	m=avg;
+	drop=is_url_valid(y1,m);
+	if(drop != 0){
+	    fprintf(stderr,"AVG->Url is dropped!!!\n");
+	}else{
+	    fprintf(stderr,"AVG->Url Not dropped\n");
+	}
+	
+	y1=my_malloc(1000);
+	strcpy(y1,url);
+	m=char_val;
+	drop=is_url_valid(y1,m);
+	if(drop != 0){
+	    fprintf(stderr,"CHAR_VAL->Url is dropped!!!\n");
+	}else{
+	    fprintf(stderr,"CHAR_VAL->Url Not dropped\n");
+	}
+	
+	y1=my_malloc(1000);
+	strcpy(y1,url);
+	m=sd;
+	drop=is_url_valid(y1,m);
+	if(drop != 0){
+	    fprintf(stderr,"SD->Url is dropped!!!\n");
+	}else{
+	    fprintf(stderr,"SD->Url Not dropped\n");
 	}
 	fflush(stderr);
 	return DECLINED;
