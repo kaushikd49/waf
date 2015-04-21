@@ -49,101 +49,142 @@ static int mod_lud_method_handler (request_rec *r)
 	fprintf(stderr,"therequest:%s\n",r->the_request);
 	const char * headerstr = apr_table_get(r->headers_in, "User-Agent");
 	char **sigs=parseSignatures(sig_file_path);
+	int isAllowed=1;
+	char hdr_field[PARAM], buffer[BUFSIZE];
+	memset(hdr_field,0,PARAM);
+	int i=0,isMatch=0;
+	char *mem[1];
+	mem[0]=hdr_field;
+	for(i=0;sigs[i] && isAllowed;i++){
+	    /* HEADER:(.+),CONTAINS */
+	    isMatch=get_substr(sigs[i],"HEADER:(.+),CONTAINS",1,mem,REG_EXTENDED);
+	    if(!isMatch){
+		memset(hdr_field,0,PARAM);
+		continue;
+	    }
+	    /* assume hdr_field has header field name */
+	    headerstr = apr_table_get(r->headers_in,hdr_field);
+	    if(headerstr==NULL){
+		fprintf(stderr,"%s header field not present\n",hdr_field);
+		memset(hdr_field,0,PARAM);
+		continue;
+	    }
+	    /* header filter */
+	    memset(buffer,0,BUFSIZE);
+	    strncpy(buffer,hdr_field,BUFSIZE);
+	    strncat(buffer,"###",BUFSIZE);
+	    strncat(buffer,headerstr,BUFSIZE);
+	    fprintf(stderr,"->->%s\n",buffer);
+	    if(header_allow(buffer,sigs)==0){ /* case insensitive */
+		fprintf(stderr,"header allowed\n");
+	    }
+	    else{
+		/* printf("header not allowed\n"); */
+		/* set isALlowed to 0 */
+		isAllowed=0;
+		fprintf(stderr,"header not allowed\n");
+	    }
+	}
 
-	/* int i=0; */
-	/* for(;sigs[i];i++){ */
-	/*     fprintf(stderr, "sigs is:%s\n",sigs[i]); */
-	/* } */
-/* header filter */
-	char buffer[BUFSIZE];
-	strncpy(buffer,"User-Agent###",BUFSIZE);
-	strncat(buffer,headerstr,BUFSIZE);
-	/* fprintf(stderr,"->->%s\n",buffer); */
-	if(header_allow(buffer,sigs)==0){ /* case insensitive */
-              fprintf(stderr,"header allowed\n");
-	}
-	else{
-	    /* printf("header not allowed\n"); */
-              fprintf(stderr,"header not allowed\n");
-	}
+
 /* request filter */
-        if(req_allow(r->the_request,sigs)==0){
-	    fprintf(stderr,"req allowed\n");
-	}
-	else{
-	    fprintf(stderr,"req not allowed\n");
-	}
-	
-	fprintf(stderr,"hello ini\n");
-	initialize_pages();
-	// char *s = malloc(3000);
-	FILE *fp;
-	
-	fp = fopen("/home/karthik/waf/src/access_waf.log","r");
-	if(fp == NULL){
-	    fprintf(stderr,"Couldnot open the file. EXITING\n");
-	    exit(0);
-	}
-	// const char delim[10] = DELIMITER;
-	char* line = NULL;
-	ssize_t read;
-	ssize_t len = 0;
-	
-	
-	while((read = getline(&line,&len,fp)) != -1){
-	    store_data(line);
-	    // //printf("------\n");
+	if(isAllowed){
+	    if(req_allow(r->the_request,sigs)==0){
+		fprintf(stderr,"req allowed\n");
+	    }
+	    else{
+		/* set isAllowed to 0 */
+		isAllowed=0;
+		fprintf(stderr,"req not allowed\n");
+	    }
 	}
 	
-	/* char url[100] = "/index.html?foo=bars&k1=21&k2=2"; */
-	
-	char *temp=my_malloc(sizeof(char)*2000);
-	char *url=strtok_r(r->the_request," ",&temp);
-	url=strtok_r(NULL," ",&temp);
-	fprintf(stderr,"url passed is ->%s\n",url);
-	
-	/* fprintf(stderr,"url -> %s\n",strtok_r(url,"?",&temp)); */
-
-	/* fprintf(stderr,"url -> %s\n",strtok_r(NULL,"?",&temp)); */
-	char *y1=my_malloc(1000);
-	strcpy(y1,url);
-	mode m=max;
-	int drop=is_url_valid(y1,m);
-	if(drop != 0){
-	    fprintf(stderr,"MAX->Url is dropped!!!\n");
-	}else{
-	    fprintf(stderr,"MAX->Url Not dropped\n");
+	if(isAllowed){
+	    
+	    initialize_pages();
+	    // char *s = malloc(3000);
+	    FILE *fp;
+	    
+	    fp = fopen("/home/karthik/waf/src/access_waf.log","r");
+	    if(fp == NULL){
+		fprintf(stderr,"Couldnot open the file. EXITING\n");
+		exit(0);
+	    }
+	    // const char delim[10] = DELIMITER;
+	    char* line = NULL;
+	    ssize_t read;
+	    ssize_t len = 0;
+	    
+	    
+	    while((read = getline(&line,&len,fp)) != -1){
+		store_data(line);
+		// //printf("------\n");
+	    }
+	    
+	    /* char url[100] = "/index.html?foo=bars&k1=21&k2=2"; */
+	    
+	    char *temp=my_malloc(sizeof(char)*2000);
+	    char *url=strtok_r(r->the_request," ",&temp);
+	    url=strtok_r(NULL," ",&temp);
+	    fprintf(stderr,"url passed is ->%s\n",url);
+	    
+	    /* fprintf(stderr,"url -> %s\n",strtok_r(url,"?",&temp)); */
+	    
+	    /* fprintf(stderr,"url -> %s\n",strtok_r(NULL,"?",&temp)); */
+	    char *y1=my_malloc(1000);
+	    strcpy(y1,url);
+	    mode m=max;
+	    int drop=is_url_valid(y1,m);
+	    if(drop != 0){
+		isAllowed=0;
+		fprintf(stderr,"MAX->Url is dropped!!!\n");
+	    }else{
+		fprintf(stderr,"MAX->Url Not dropped\n");
+	    }
+	    if(isAllowed){
+		y1=my_malloc(1000);
+		strcpy(y1,url);
+		m=avg;
+		drop=is_url_valid(y1,m);
+		if(drop != 0){
+		    isAllowed=0;
+		    fprintf(stderr,"AVG->Url is dropped!!!\n");
+		}else{
+		    fprintf(stderr,"AVG->Url Not dropped\n");
+		}
+	    }
+	    
+	    if(isAllowed){
+		y1=my_malloc(1000);
+		strcpy(y1,url);
+		m=char_val;
+		drop=is_url_valid(y1,m);
+		if(drop != 0){
+		    isAllowed=0;
+		    fprintf(stderr,"CHAR_VAL->Url is dropped!!!\n");
+		}else{
+		    fprintf(stderr,"CHAR_VAL->Url Not dropped\n");
+		}
+	    }
+	    
+	    if(isAllowed){
+		y1=my_malloc(1000);
+		strcpy(y1,url);
+		m=sd;
+		drop=is_url_valid(y1,m);
+		if(drop != 0){
+		    isAllowed=0;
+		    fprintf(stderr,"SD->Url is dropped!!!\n");
+		}else{
+		    fprintf(stderr,"SD->Url Not dropped\n");
+		}
+	    }
+	    
 	}
-	
-	y1=my_malloc(1000);
-	strcpy(y1,url);
-	m=avg;
-	drop=is_url_valid(y1,m);
-	if(drop != 0){
-	    fprintf(stderr,"AVG->Url is dropped!!!\n");
-	}else{
-	    fprintf(stderr,"AVG->Url Not dropped\n");
-	}
-	
-	y1=my_malloc(1000);
-	strcpy(y1,url);
-	m=char_val;
-	drop=is_url_valid(y1,m);
-	if(drop != 0){
-	    fprintf(stderr,"CHAR_VAL->Url is dropped!!!\n");
-	}else{
-	    fprintf(stderr,"CHAR_VAL->Url Not dropped\n");
-	}
-	
-	y1=my_malloc(1000);
-	strcpy(y1,url);
-	m=sd;
-	drop=is_url_valid(y1,m);
-	if(drop != 0){
-	    fprintf(stderr,"SD->Url is dropped!!!\n");
-	}else{
-	    fprintf(stderr,"SD->Url Not dropped\n");
-	}
+	if(isAllowed)
+	    fprintf(stderr,"ALLOWED\n");
+	else
+	    fprintf(stderr,"NOT ALLOWED\n");
 	fflush(stderr);
 	return DECLINED;
 }
