@@ -2,7 +2,7 @@
 
 int main(){
 
-    char *sig_file_path="/home/karthik/waf/src/docs/signatures.sig";
+    char *sig_file_path="/home/kaushik/waf/src/docs/signatures.sig";
     char *req="GET /?fahsdf=dsafasd HTTP/1.1";
     //fprintf(stderr,"therequest:%s\n",req);
     /* const char * headerstr = apr_table_get(r->headers_in, "User-Agent"); */
@@ -37,7 +37,7 @@ int main(){
     // char *s = my_malloc(3000);
     FILE *fp;
 
-	fp = fopen("/home/karthik/waf/src/access_waf.log","r");
+	fp = fopen("/home/kaushik/waf/src/access_waf.log","r");
 	if(fp == NULL){
 	    //fprintf(stderr,"Couldnot open the file. EXITING\n");
 	    exit(0);
