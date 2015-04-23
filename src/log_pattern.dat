@@ -1,0 +1,2 @@
+LogFormat "%a@@@###%A@@@###%m@@@###%U@@@###%q@@@###%H@@@###%D@@@###%f@@@###%k@@@###%l@@@###%L@@@###%s@@@###%T@@@###%u@@@###%I@@@###%O@@@###%S" waf
+CustomLog ${APACHE_LOG_DIR}/access_waf.log waf
