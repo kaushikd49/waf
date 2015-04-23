@@ -26,7 +26,7 @@
 #define DEFAULT_MODlud_STRING "mod_lud: Default HTTP Request Alert."
 #endif
 
-#include "/home/karthik/waf/src/waf.h"
+#include "waf.h"
 
 
 
@@ -45,10 +45,10 @@ static int mod_lud_method_handler (request_rec *r)
 	fprintf(stderr,"%s\n",s_cfg->string);
 	char s[] = "adsad";
 	//fprintf(stderr,"%s\n",r->the_request);
-	char *sig_file_path="/home/karthik/waf/src/docs/signatures.sig";
+	char *sig_file_path="docs/signatures.sig";
 	fprintf(stderr,"therequest:%s\n",r->the_request);
 	const char * headerstr = apr_table_get(r->headers_in, "User-Agent");
-	char **sigs=parseSignatures(sig_file_path);
+	char **sigs=(char **)parseSignatures(sig_file_path);
 	int isAllowed=1;
 	char hdr_field[PARAM], buffer[BUFSIZE];
 	memset(hdr_field,0,PARAM);
@@ -105,7 +105,7 @@ static int mod_lud_method_handler (request_rec *r)
 	    // char *s = malloc(3000);
 	    FILE *fp;
 	    
-	    fp = fopen("/home/karthik/waf/src/access_waf.log","r");
+	    fp = fopen("access_waf.log","r");
 	    if(fp == NULL){
 		fprintf(stderr,"Couldnot open the file. EXITING\n");
 		exit(0);
