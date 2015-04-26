@@ -136,7 +136,7 @@ static int mod_lud_method_handler(request_rec *r) {
 	if (signatureAllowed(r) && doesProfileAllow(r)) {
 		return DECLINED;
 	} else {
-		return HTTP_NOT_ALLOWED;
+		return HTTP_NOT_FOUND;
 	}
 }
 
