@@ -1,8 +1,7 @@
 #include <string.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
-#include <limits.h>
 
 #define NUMBER 1
 #define ALPHABET 2
@@ -75,48 +74,48 @@ int main(){
 	}
 	print_profile();
 
-	// char url[100] = "/index.html?foo=bars&k1=21,s&k2=2";
-	// // char* backup = my_malloc(strlen(url)*sizeof(char));
-	// // strcpy(backup,url);
+	 char url[100] = "/index.html?foo=bars&k1=21,s&k2=2";
+	 char* backup = my_malloc(strlen(url)*sizeof(char));
+	 strcpy(backup,url);
 
-	// mode m = max;
-	// printf("Testing Max\n");
-	// int drop = is_url_valid(url,m);
-	// if(drop != 0){
-	// 	printf("Url is dropped!!!\n");
-	// }else{
-	// 	printf("Url Not dropped\n");
-	// }
+	 mode m = max;
+	 printf("Testing Max\n");
+	 int drop = is_url_valid(url,m);
+	 if(drop != 0){
+	 	printf("Url is dropped!!!\n");
+	 }else{
+	 	printf("Url Not dropped\n");
+	 }
 	
-	// // strcpy(url,backup);
-	// m = avg;
-	// printf("Testing Average\n");
-	// drop = is_url_valid(url,m);
-	// if(drop != 0){
-	// 	printf("Url is dropped!!!\n");
-	// }else{
-	// 	printf("Url Not dropped\n");
-	// }
+	 strcpy(url,backup);
+	 m = avg;
+	 printf("Testing Average\n");
+	 drop = is_url_valid(url,m);
+	 if(drop != 0){
+	 	printf("Url is dropped!!!\n");
+	 }else{
+	 	printf("Url Not dropped\n");
+	 }
 	
-	// // strcpy(url,backup);
-	// m = charset;
-	// printf("Testing Char Set\n");
-	// drop = is_url_valid(url,m);
-	// if(drop != 0){
-	// 	printf("Url is dropped!!!\n");
-	// }else{
-	// 	printf("Url Not dropped\n");
-	// }
+	 strcpy(url,backup);
+	 m = charset;
+	 printf("Testing Char Set\n");
+	 drop = is_url_valid(url,m);
+	 if(drop != 0){
+	 	printf("Url is dropped!!!\n");
+	 }else{
+	 	printf("Url Not dropped\n");
+	 }
 
-	// // strcpy(url,backup);
-	// m = sd;
-	// printf("Testing Average\n");
-	// drop = is_url_valid(url,m);
-	// if(drop != 0){
-	// 	printf("Url is dropped!!!\n");
-	// }else{
-	// 	printf("Url Not dropped\n");
-	// }
+	 strcpy(url,backup);
+	 m = sd;
+	 printf("Testing Average\n");
+	 drop = is_url_valid(url,m);
+	 if(drop != 0){
+	 	printf("Url is dropped!!!\n");
+	 }else{
+	 	printf("Url Not dropped\n");
+	 }
 	
 
 
@@ -131,7 +130,7 @@ void print_profile(){
 		page curr_page = page_arr[page_index];
 		printf("----------------------------------------------------------------------------\n");
 		printf("Details for Page = %s \t and Max Params = %d\n",curr_page.pageName,curr_page.maxParams);
-		printf("|ParamName\t\tAverage\t\tStd\t\t\tCharset\t\t\n",curr_page.pageName);
+		printf("|ParamName\t\tAverage\t\tStd\t\t\tCharset\t\t\n");
 		// printf("----------\n");
 		int param_index = 0;
 		for(param_index =0;param_index < 100;param_index++){
@@ -362,7 +361,8 @@ float standard_deviation(int* data,float mean)
 		}
 	}  
 
-	return sqrt(sum_deviation/100);           
+	return 1.0;
+	return sqrtf(sum_deviation/100);           
 }
 
 int getCharset(char c) {
@@ -507,13 +507,13 @@ int is_url_valid(char* line,mode m){
 
 			if(false == 1){
 				if(i == 0){
-					printf("[URL Dropped] parameter = %s doesnot accept number as input parameter.\n");
+					printf("[URL Dropped] parameter = %s doesnot accept number as input parameter.\n",lhs);
 				}
 				if(i==1){
-					printf("[URL Dropped] parameter = %s doesnot accept string as input parameter.\n");
+					printf("[URL Dropped] parameter = %s doesnot accept string as input parameter.\n",lhs);
 				}
 				if(i==2){
-					printf("[URL Dropped] parameter = %s doesnot accept special charachters as input parameter.\n");
+					printf("[URL Dropped] parameter = %s doesnot accept special charachters as input parameter.\n",lhs);
 				}
 				return -1;
 			}
@@ -530,7 +530,7 @@ int is_url_valid(char* line,mode m){
 }
 	
 void * my_malloc(size_t sz){
-    return my_malloc(2048*sizeof(char));
+    return malloc(2048*sizeof(char));
 }	
 
 	
