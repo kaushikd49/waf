@@ -36,7 +36,8 @@ typedef struct {
 } modlud_config;
 
 int profileCheck(char* url) {
-	for (int i = max; i < sd; i++) {
+	int i;
+	for (i = max; i < sd; i++) {
 		char* y1 = my_malloc(1000);
 		strcpy(y1, url);
 		fprintf(stderr, "Mode is %d \n", i);
