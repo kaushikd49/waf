@@ -29,28 +29,26 @@
 #include "/home/kaushik/waf/src/waf.h"
 
 module AP_MODULE_DECLARE_DATA lud_module;
+#define SIGNATURE_PATH "/home/kaushik/waf/src/docs/signatures.sig"
 
 typedef struct {
 	char *string;
 } modlud_config;
 
-static int mod_lud_method_handler(request_rec *r) {
+void is_req_droppable(request_rec* r) {
 	modlud_config *s_cfg = ap_get_module_config(r->server->module_config,
 			&lud_module);
 
-	fprintf(stderr, "hello\n");
 	fprintf(stderr, "%s\n", s_cfg->string);
-	char s[] = "adsad";
-	//fprintf(stderr,"%s\n",r->the_request);
-	char *sig_file_path = "/home/kaushik/waf/src/docs/signatures.sig";
+	char *sig_file_path = SIGNATURE_PATH;
 	fprintf(stderr, "therequest:%s\n", r->the_request);
-	const char * headerstr = apr_table_get(r->headers_in, "User-Agent");
-	char **sigs = parseSignatures(sig_file_path);
+	const char* headerstr = apr_table_get(r->headers_in, "User-Agent");
+	char** sigs = parseSignatures(sig_file_path);
 	int isAllowed = 1;
 	char hdr_field[PARAM], buffer[BUFSIZE];
 	memset(hdr_field, 0, PARAM);
 	int i = 0, isMatch = 0;
-	char *mem[1];
+	char* mem[1];
 	mem[0] = hdr_field;
 	for (i = 0; sigs[i] && isAllowed; i++) {
 		/* HEADER:(.+),CONTAINS */
@@ -73,7 +71,8 @@ static int mod_lud_method_handler(request_rec *r) {
 		strncat(buffer, "###", BUFSIZE);
 		strncat(buffer, headerstr, BUFSIZE);
 		fprintf(stderr, "->->%s\n", buffer);
-		if (header_allow(buffer, sigs) == 0) { /* case insensitive */
+		if (header_allow(buffer, sigs) == 0) {
+			/* case insensitive */
 			fprintf(stderr, "header allowed\n");
 		} else {
 			/* printf("header not allowed\n"); */
@@ -82,7 +81,6 @@ static int mod_lud_method_handler(request_rec *r) {
 			fprintf(stderr, "header not allowed\n");
 		}
 	}
-
 	/* request filter */
 	if (isAllowed) {
 		if (req_allow(r->the_request, sigs) == 0) {
@@ -93,13 +91,10 @@ static int mod_lud_method_handler(request_rec *r) {
 			fprintf(stderr, "req not allowed\n");
 		}
 	}
-
 	if (isAllowed) {
-
 		initialize_pages();
 		// char *s = malloc(3000);
-		FILE *fp;
-
+		FILE* fp;
 		fp = fopen("/home/kaushik/waf/src/access_waf.log", "r");
 		if (fp == NULL) {
 			fprintf(stderr, "Couldnot open the file. EXITING\n");
@@ -109,23 +104,18 @@ static int mod_lud_method_handler(request_rec *r) {
 		char* line = NULL;
 		ssize_t read;
 		ssize_t len = 0;
-
 		while ((read = getline(&line, &len, fp)) != -1) {
 			store_data(line);
 			// //printf("------\n");
 		}
-
 		/* char url[100] = "/index.html?foo=bars&k1=21&k2=2"; */
-
-		char *temp = my_malloc(sizeof(char) * 2000);
-		char *url = strtok_r(r->the_request, " ", &temp);
+		char* temp = my_malloc(sizeof(char) * 2000);
+		char* url = strtok_r(r->the_request, " ", &temp);
 		url = strtok_r(NULL, " ", &temp);
 		fprintf(stderr, "url passed is ->%s\n", url);
-
 		/* fprintf(stderr,"url -> %s\n",strtok_r(url,"?",&temp)); */
-
 		/* fprintf(stderr,"url -> %s\n",strtok_r(NULL,"?",&temp)); */
-		char *y1 = my_malloc(1000);
+		char* y1 = my_malloc(1000);
 		strcpy(y1, url);
 		mode m = max;
 		int drop = is_url_valid(y1, m);
@@ -147,7 +137,6 @@ static int mod_lud_method_handler(request_rec *r) {
 				fprintf(stderr, "AVG->Url Not dropped\n");
 			}
 		}
-
 		if (isAllowed) {
 			y1 = my_malloc(1000);
 			strcpy(y1, url);
@@ -160,7 +149,6 @@ static int mod_lud_method_handler(request_rec *r) {
 				fprintf(stderr, "CHAR_VAL->Url Not dropped\n");
 			}
 		}
-
 		if (isAllowed) {
 			y1 = my_malloc(1000);
 			strcpy(y1, url);
@@ -173,14 +161,21 @@ static int mod_lud_method_handler(request_rec *r) {
 				fprintf(stderr, "SD->Url Not dropped\n");
 			}
 		}
-
 	}
 	if (isAllowed)
 		fprintf(stderr, "ALLOWED\n");
 	else
 		fprintf(stderr, "NOT ALLOWED\n");
+
 	fflush(stderr);
-	return DECLINED;
+}
+
+static int mod_lud_method_handler(request_rec *r) {
+	if (is_req_droppable(r)) {
+		return HTTP_NOT_ALLOWED;
+	} else {
+		return DECLINED;
+	}
 }
 
 static void mod_lud_register_hooks(apr_pool_t *p) {
