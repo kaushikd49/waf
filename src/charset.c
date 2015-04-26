@@ -4,7 +4,7 @@
  *  Created on: Feb 5, 2015
  *      Author: kaushik
  */
-
+/*
 #include<stdio.h>
 #include <limits.h>
 
@@ -61,3 +61,4 @@ int main() {
 
 	return 0;
 }
+*/

@@ -1,3 +1,5 @@
+#ifndef WAF_H
+#define WAF_H
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
@@ -21,7 +23,7 @@ void store_data();
 
 typedef enum {max,avg,charset,sd} mode;
 
-int getCharset(char);
+//int getCharset(char);
 int getAllCharset(char*, int*);
 void * my_malloc(size_t);
 
@@ -75,3 +77,4 @@ char ** parseSignatubres(char *f);
 int req_allow(char *hdr,char **sigs);
 
 /* anomaly */
+#endif

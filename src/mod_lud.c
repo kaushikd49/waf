@@ -52,7 +52,6 @@ int profileCheck(char* url) {
 }
 
 int doesProfileAllow(request_rec* r) {
-	initialize_pages();
 	FILE* fp;
 	fp = fopen(ACCESS_LOG, "r");
 	if (fp == NULL) {
@@ -135,11 +134,12 @@ int signatureAllowed(request_rec* r) {
 }
 
 static int mod_lud_method_handler(request_rec *r) {
-	if (signatureAllowed(r) && doesProfileAllow(r)) {
-		return DECLINED;
-	} else {
-		return HTTP_NOT_FOUND;
-	}
+	return DECLINED;
+	//if (signatureAllowed(r) && doesProfileAllow(r)) {
+	//	return DECLINED;
+	//} else {
+	//	return HTTP_NOT_FOUND;
+//	}
 }
 
 static void mod_lud_register_hooks(apr_pool_t *p) {
