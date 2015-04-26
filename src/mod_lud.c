@@ -27,15 +27,51 @@
 #endif
 
 #include "/home/kaushik/waf/src/waf.h"
-
 module AP_MODULE_DECLARE_DATA lud_module;
-#define SIGNATURE_PATH "/home/kaushik/waf/src/docs/signatures.sig"
 
+#define SIGNATURE_PATH "/home/kaushik/waf/src/docs/signatures.sig"
+#define ACCESS_LOG "/home/kaushik/waf/src/access_waf.log"
 typedef struct {
 	char *string;
 } modlud_config;
 
-void is_req_droppable(request_rec* r) {
+int profileCheck(char* url) {
+	for (int i = max; i < sd; i++) {
+		char* y1 = my_malloc(1000);
+		strcpy(y1, url);
+		fprintf(stderr, "Mode is %d \n", i);
+		if (is_url_valid(y1, avg) != 0) {
+			fprintf(stderr, "Url is dropped!!!\n");
+			return 0;
+		} else {
+			fprintf(stderr, "Url Not dropped\n");
+			return 1;
+		}
+	}
+}
+
+int doesProfileAllow(request_rec* r) {
+	initialize_pages();
+	FILE* fp;
+	fp = fopen(ACCESS_LOG, "r");
+	if (fp == NULL) {
+		fprintf(stderr, "Couldn't open the file. EXITING\n");
+		exit(0);
+	}
+	char* line = NULL;
+	ssize_t read;
+	ssize_t len = 0;
+	while ((read = getline(&line, &len, fp)) != -1) {
+		store_data(line);
+	}
+	char* temp = my_malloc(sizeof(char) * 2000);
+	char* url = strtok_r(r->the_request, " ", &temp);
+	url = strtok_r(NULL, " ", &temp);
+	fprintf(stderr, "url passed is ->%s\n", url);
+	return profileCheck(url);
+}
+
+int signatureAllowed(request_rec* r) {
 	modlud_config *s_cfg = ap_get_module_config(r->server->module_config,
 			&lud_module);
 
@@ -50,6 +86,7 @@ void is_req_droppable(request_rec* r) {
 	int i = 0, isMatch = 0;
 	char* mem[1];
 	mem[0] = hdr_field;
+
 	for (i = 0; sigs[i] && isAllowed; i++) {
 		/* HEADER:(.+),CONTAINS */
 		isMatch = get_substr(sigs[i], "HEADER:(.+),CONTAINS", 1, mem,
@@ -91,90 +128,15 @@ void is_req_droppable(request_rec* r) {
 			fprintf(stderr, "req not allowed\n");
 		}
 	}
-	if (isAllowed) {
-		initialize_pages();
-		// char *s = malloc(3000);
-		FILE* fp;
-		fp = fopen("/home/kaushik/waf/src/access_waf.log", "r");
-		if (fp == NULL) {
-			fprintf(stderr, "Couldnot open the file. EXITING\n");
-			exit(0);
-		}
-		// const char delim[10] = DELIMITER;
-		char* line = NULL;
-		ssize_t read;
-		ssize_t len = 0;
-		while ((read = getline(&line, &len, fp)) != -1) {
-			store_data(line);
-			// //printf("------\n");
-		}
-		/* char url[100] = "/index.html?foo=bars&k1=21&k2=2"; */
-		char* temp = my_malloc(sizeof(char) * 2000);
-		char* url = strtok_r(r->the_request, " ", &temp);
-		url = strtok_r(NULL, " ", &temp);
-		fprintf(stderr, "url passed is ->%s\n", url);
-		/* fprintf(stderr,"url -> %s\n",strtok_r(url,"?",&temp)); */
-		/* fprintf(stderr,"url -> %s\n",strtok_r(NULL,"?",&temp)); */
-		char* y1 = my_malloc(1000);
-		strcpy(y1, url);
-		mode m = max;
-		int drop = is_url_valid(y1, m);
-		if (drop != 0) {
-			isAllowed = 0;
-			fprintf(stderr, "MAX->Url is dropped!!!\n");
-		} else {
-			fprintf(stderr, "MAX->Url Not dropped\n");
-		}
-		if (isAllowed) {
-			y1 = my_malloc(1000);
-			strcpy(y1, url);
-			m = avg;
-			drop = is_url_valid(y1, m);
-			if (drop != 0) {
-				isAllowed = 0;
-				fprintf(stderr, "AVG->Url is dropped!!!\n");
-			} else {
-				fprintf(stderr, "AVG->Url Not dropped\n");
-			}
-		}
-		if (isAllowed) {
-			y1 = my_malloc(1000);
-			strcpy(y1, url);
-			m = char_val;
-			drop = is_url_valid(y1, m);
-			if (drop != 0) {
-				isAllowed = 0;
-				fprintf(stderr, "CHAR_VAL->Url is dropped!!!\n");
-			} else {
-				fprintf(stderr, "CHAR_VAL->Url Not dropped\n");
-			}
-		}
-		if (isAllowed) {
-			y1 = my_malloc(1000);
-			strcpy(y1, url);
-			m = sd;
-			drop = is_url_valid(y1, m);
-			if (drop != 0) {
-				isAllowed = 0;
-				fprintf(stderr, "SD->Url is dropped!!!\n");
-			} else {
-				fprintf(stderr, "SD->Url Not dropped\n");
-			}
-		}
-	}
-	if (isAllowed)
-		fprintf(stderr, "ALLOWED\n");
-	else
-		fprintf(stderr, "NOT ALLOWED\n");
-
 	fflush(stderr);
+	return isAllowed;
 }
 
 static int mod_lud_method_handler(request_rec *r) {
-	if (is_req_droppable(r)) {
-		return HTTP_NOT_ALLOWED;
-	} else {
+	if (signatureAllowed(r) && doesProfileAllow(r)) {
 		return DECLINED;
+	} else {
+		return HTTP_NOT_ALLOWED;
 	}
 }
 
