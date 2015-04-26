@@ -53,6 +53,7 @@ int profileCheck(char* url) {
 
 int doesProfileAllow(request_rec* r) {
 	FILE* fp;
+	fprintf(stderr, "hello\n");
 	fp = fopen(ACCESS_LOG, "r");
 	if (fp == NULL) {
 		fprintf(stderr, "Couldn't open the file. EXITING\n");
@@ -134,12 +135,15 @@ int signatureAllowed(request_rec* r) {
 }
 
 static int mod_lud_method_handler(request_rec *r) {
-	return DECLINED;
-	//if (signatureAllowed(r) && doesProfileAllow(r)) {
-	//	return DECLINED;
-	//} else {
+  fprintf(stderr, "before hello\n");
+	if ( signatureAllowed(r) ) { 
+//&& doesProfileAllow(r)) {
 	//	return HTTP_NOT_FOUND;
-//	}
+		return DECLINED;
+	} else {
+	//	return DECLINED;
+		return HTTP_NOT_FOUND;
+	}
 }
 
 static void mod_lud_register_hooks(apr_pool_t *p) {

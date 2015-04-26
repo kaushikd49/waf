@@ -1,4 +1,4 @@
-HEADER:User-Agent,CONTAINS:"curls"
+HEADER:User-Agent,CONTAINS:"mozillas"
 HEADER:User-Agent,CONTAINS:"<script>"
 HEADER:User-Agent,CONTAINS:"bot"
 HEADER:Accept-Charset,CONTAINS:"utf-8"
