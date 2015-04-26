@@ -1,92 +1,125 @@
-#include "waf.h"
+#include <string.h>
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+#define NUMBER 1
+#define ALPHABET 2
+#define SPL_SYMBOL 4
+
+void store_data();
+
+typedef enum {max,avg,charset,sd} mode;
+
+int getCharset(char);
+int getAllCharset(char*, int*);
+void * my_malloc(size_t);
+
+#define DELIMITER "@@@###"
+
+struct param{
+	int total;
+	int count;
+	float avg;
+	float sd;
+	int csets[3];
+	int sd_array[100];	
+	char paramName[100];
+};
+
+typedef struct param param;
+
+struct page{
+	char pageName[100];
+	int maxParams;
+	param url_params[100];
+	int param_arr_index[100];
+};
+
+typedef struct page page;
+
+void construct_params(int,char*);
+int is_url_valid(char*,mode);
+
+page page_arr[100];
+
+int page_arr_index[100];
+int param_arr_index[100];
+
+void add_details_to_page(char* ,char* );
+void print_profile();
+float standard_deviation(int* ,float);
 
 int main(){
+	// printf("Hello world\n");
+	FILE *fp;
 
-    char *sig_file_path="/home/kaushik/waf/src/docs/signatures.sig";
-    char *req="GET /?fahsdf=dsafasd HTTP/1.1";
-    //ffprintf(stderr,stderr,"therequest:%s\n",req);
-    /* const char * headerstr = apr_table_get(r->headers_in, "User-Agent"); */
-    const char * headerstr = "Mozilla/5.0 (X11; Linux x86_64; rv:12.0) Gecko/20100101 Firefox/21.0";
-    char **sigs=parseSignatures(sig_file_path);
-    
-    /* int i=0; */
-	/* for(;sigs[i];i++){ */
-	/*     //ffprintf(stderr,stderr, "sigs is:%s\n",sigs[i]); */
-	/* } */
-/* header filter */
-    char buffer[BUFSIZE];
-    strncpy(buffer,"User-Agent###",BUFSIZE);
-    strncat(buffer,headerstr,BUFSIZE);
-    /* //ffprintf(stderr,stderr,"->->%s\n",buffer); */
-    if(header_allow(buffer,sigs)==0){ /* case insensitive */
-	//ffprintf(stderr,stderr,"header allowed\n");
-    }
-    else{
-	/* //ffprintf(stderr,"header not allowed\n"); */
-	//ffprintf(stderr,stderr,"header not allowed\n");
-    }
-/* request filter */
-    if(req_allow(req,sigs)==0){
-	//ffprintf(stderr,stderr,"req allowed\n");
-    }
-    else{
-	//ffprintf(stderr,stderr,"req not allowed\n");
-    }
-    
-    initialize_pages();
-    // char *s = my_malloc(3000);
-    FILE *fp;
-
-	fp = fopen("/home/kaushik/waf/src/access_waf.log","r");
+	fp = fopen("access_waf.log","r");
 	if(fp == NULL){
-	    //ffprintf(stderr,stderr,"Couldnot open the file. EXITING\n");
-	    exit(0);
+		printf("Couldnot open the file. EXITING\n");
+		exit(0);
 	}
 	// const char delim[10] = DELIMITER;
 	char* line = NULL;
 	ssize_t read;
 	ssize_t len = 0;
-
+	int i = 0;
+	for(i=0;i<100;i++){
+		page_arr_index[i] = 0;
+	}
 
 	while((read = getline(&line,&len,fp)) != -1){
 		store_data(line);
-		// ////ffprintf(stderr,"------\n");
+		// printf("------\n");
 	}
-	// // free(s);
-	char url[100] = "/index.html?foo=bars&k1=21&k2=2";
-	//ffprintf(stderr,"My char set = %s\n",url);
-	mode m = max;
-	//ffprintf(stderr,"Testing Max\n");
-	int drop = is_url_valid(url,m);
-	if(drop != 0){
-		//ffprintf(stderr,"Url is dropped!!!\n");
-	}else{
-		//ffprintf(stderr,"Url Not dropped\n");
-	}
-	//ffprintf(stderr,"--------------------------------\n");
-	//ffprintf(stderr,"Testing Avg\n");
-	drop = is_url_valid(url,avg);
-	if(drop != 0){
-		//ffprintf(stderr,"Url is dropped!!!\n");
-	}else{
-		//ffprintf(stderr,"Url Not dropped\n");
-	}
-	//ffprintf(stderr,"Testing SD \n");
-	drop = is_url_valid(url,sd);
-	if(drop != 0){
-		//ffprintf(stderr,"Url is dropped!!!\n");
-	}else{
-		//ffprintf(stderr,"Url Not dropped\n");
-	}
-	//ffprintf(stderr,"--------------------------------\n");
-	drop = is_url_valid(url,char_val);
-	if(drop != 0){
-		//ffprintf(stderr,"Url is dropped!!!\n");
-	}else{
-		//ffprintf(stderr,"Url Not dropped\n");
-	}
-	//test_page_content();
-	fclose(fp);
+	print_profile();
+
+	 char url[100] = "/index.html?foo=bars&k1=21,s&k2=2";
+	 char* backup = my_malloc(strlen(url)*sizeof(char));
+	 strcpy(backup,url);
+
+	 mode m = max;
+	 printf("Testing Max\n");
+	 int drop = is_url_valid(url,m);
+	 if(drop != 0){
+	 	printf("Url is dropped!!!\n");
+	 }else{
+	 	printf("Url Not dropped\n");
+	 }
+	
+	 strcpy(url,backup);
+	 m = avg;
+	 printf("Testing Average\n");
+	 drop = is_url_valid(url,m);
+	 if(drop != 0){
+	 	printf("Url is dropped!!!\n");
+	 }else{
+	 	printf("Url Not dropped\n");
+	 }
+	
+	 strcpy(url,backup);
+	 m = charset;
+	 printf("Testing Char Set\n");
+	 drop = is_url_valid(url,m);
+	 if(drop != 0){
+	 	printf("Url is dropped!!!\n");
+	 }else{
+	 	printf("Url Not dropped\n");
+	 }
+
+	 strcpy(url,backup);
+	 m = sd;
+	 printf("Testing Average\n");
+	 drop = is_url_valid(url,m);
+	 if(drop != 0){
+	 	printf("Url is dropped!!!\n");
+	 }else{
+	 	printf("Url Not dropped\n");
+	 }
+	
+
+
+	return 10;
 }
 
 void print_profile(){
@@ -95,10 +128,10 @@ void print_profile(){
 		if(page_arr_index[page_index] ==0)
 			break;
 		page* curr_page = &page_arr[page_index];
-		fprintf(stderr,"----------------------------------------------------------------------------\n");
-		fprintf(stderr,"Details for Page = %s \t and Max Params = %d\n",curr_page->pageName,curr_page->maxParams);
-		fprintf(stderr,"|ParamName\t\tAverage\t\tStd\t\t\tCharset\t\t\n");
-		// fprintf(stderr,"----------\n");
+		printf("----------------------------------------------------------------------------\n");
+		printf("Details for Page = %s \t and Max Params = %d\n",curr_page->pageName,curr_page->maxParams);
+		printf("|ParamName\t\tAverage\t\tStd\t\t\tCharset\t\t\n");
+		// printf("----------\n");
 		int param_index = 0;
 		for(param_index =0;param_index < 100;param_index++){
 			if(curr_page->param_arr_index[param_index]==0)
@@ -113,16 +146,16 @@ void print_profile(){
 			arr[1] = url_param->csets[1] == 1?'S':' ';
 			arr[2] = url_param->csets[2] == 1?'~':' ';
 			
-			fprintf(stderr,"|%s\t\t%f\t\t%f\t\t%s\n",url_param->paramName,url_param->avg,url_param->sd,arr);
+			printf("|%s\t\t%f\t\t%f\t\t%s\n",url_param->paramName,url_param->avg,url_param->sd,arr);
 			
 			
 		}
-		fprintf(stderr,"---------------------------------------------------------------------------\n");
+		printf("---------------------------------------------------------------------------\n");
 	}
 }
 
 void store_data(char* line){
-	// fprintf(stderr,"[store_data] line = %s and\n",line);
+	// printf("[store_data] line = %s and\n",line);
 	char* token = my_malloc(10000);
 	int index = 0;
 	char* place_holder = my_malloc(sizeof(char));
@@ -134,19 +167,19 @@ void store_data(char* line){
 		if(index == 3){
 			name = my_malloc(strlen(token)*sizeof(char));
 			strcpy(name,token);
-			// //fprintf(stderr,"Name = %s\n",name);
+			// //printf("Name = %s\n",name);
 		}
 
 		if(index == 4){
 			url = my_malloc(strlen(token)*sizeof(char));
 			strcpy(url,token);
-			// //fprintf(stderr,"[store_data] Url = %s\n",url);
+			// //printf("[store_data] Url = %s\n",url);
 		}
 		
 		token = strtok_r(NULL,DELIMITER,&place_holder);
 		index += 1;
 	}
-	// fprintf(stderr,"[store_data] name = %s and url = %s\n",name,url);
+	// printf("[store_data] name = %s and url = %s\n",name,url);
 	add_details_to_page(name,url);
 	// free(status);
 	// free(protocol);
@@ -161,7 +194,7 @@ void add_details_to_page(char *name, char* url){
 	// strcpy(page_arr[index].pageName,name);
 	page_arr[index].maxParams = get_max_params(url);
 	construct_params(index,url);
-	// fprintf(stderr,"[add_details_to_page] index = %d and url = %s\n",index,url);
+	// printf("[add_details_to_page] index = %d and url = %s\n",index,url);
 
 }
 
@@ -170,12 +203,12 @@ void construct_params(int page_index,char* url){
 	page *current_page = &page_arr[page_index];
 	char *p = my_malloc(strlen(url)*sizeof(char));
 	strcpy(p,url);
-	//fprintf(stderr,"[get_parameter_obj] Original url = %s\n",url);
+	//printf("[get_parameter_obj] Original url = %s\n",url);
 
 	if(*p == '?')
 		p++;
 
-	//fprintf(stderr,"[get_parameter_obj] Value = %s\n",p);
+	//printf("[get_parameter_obj] Value = %s\n",p);
 
 	char* token1 = my_malloc(strlen(p)*sizeof(char));
 	char* place_holder = my_malloc(sizeof(char));
@@ -209,7 +242,7 @@ void construct_params(int page_index,char* url){
 		strcpy(t_rhs,rhs);
 		// int len = 0;
 		
-		// fprintf(stderr,"[construct_params] lhs = %s and rhs = %s\n",lhs,rhs);
+		// printf("[construct_params] lhs = %s and rhs = %s\n",lhs,rhs);
 		int param_index = get_param_index(lhs,page_index);
 
 
@@ -230,12 +263,12 @@ void construct_params(int page_index,char* url){
 int get_max_params(char* url){
 	char *p = my_malloc(strlen(url)*sizeof(char));
 	strcpy(p,url);
-	//fprintf(stderr,"[get_parameter_obj] Original url = %s\n",url);
+	//printf("[get_parameter_obj] Original url = %s\n",url);
 
 	if(*p == '?')
 		p++;
 
-	//fprintf(stderr,"[get_parameter_obj] Value = %s\n",p);
+	//printf("[get_parameter_obj] Value = %s\n",p);
 
 	char* token1 = my_malloc(strlen(p)*sizeof(char));
 	char* place_holder = my_malloc(sizeof(char));
@@ -266,14 +299,14 @@ int get_page_index(char* name){
 			break;
 		}else{
 			page_arr[page_index];
-			// fprintf(stderr,"%s \n",name);
+			// printf("%s \n",name);
 			if(strcmp(page_arr[page_index].pageName,name) == 0){
 				break;
 			}
 		}
 		
 	}
-	// fprintf(stderr,"Page index = %d for %s \n",page_index,name);
+	// printf("Page index = %d for %s \n",page_index,name);
 	return page_index;
 }
 
@@ -299,7 +332,7 @@ int get_param_index(char* name,int page_index){
 		}
 
 	}
-	// fprintf(stderr,"Param index = %d for %s\n",param_index,name);
+	// printf("Param index = %d for %s\n",param_index,name);
 	page_arr[page_index].param_arr_index[param_index] = 1;
 	return param_index;
 }
@@ -308,18 +341,18 @@ float standard_deviation(int* data,float mean)
 {
 	int index=0;
 	float sum_deviation = 0;
-	// fprintf(stderr,"[standard_deviation] Count = %d\n",n);
-	// fprintf(stderr,"[standard_deviation] Mean = %f\n",mean);
+	// printf("[standard_deviation] Count = %d\n",n);
+	// printf("[standard_deviation] Mean = %f\n",mean);
 	for(index=0;index<100;index++){
 
 		int value = data[index];
 		if(value == 0)
 			 continue;
 
-		// fprintf(stderr,"[standard_deviation]index = %d , value = %d\n",index,value);
+		// printf("[standard_deviation]index = %d , value = %d\n",index,value);
 		while(value >0){
 
-		// fprintf(stderr,"data  = %f \n",data[i]);
+		// printf("data  = %f \n",data[i]);
 			sum_deviation+=(index-mean)*(index-mean);
 			value --;
 		}
@@ -369,7 +402,7 @@ int is_url_valid(char* line,mode m){
 	char* token = my_malloc(10000);
 	int index = 0;
 	char* place_holder = my_malloc(sizeof(char));
-	// fprintf(stderr,"Line = %s\n",line);	
+	// printf("Line = %s\n",line);	
 
 	token = strtok_r(line,"?",&place_holder);
 	
@@ -377,24 +410,24 @@ int is_url_valid(char* line,mode m){
 		if(name == NULL){
 			name = my_malloc(strlen(token)*sizeof(char));
 			strcpy(name,token);
-			// //fprintf(stderr,"Name = %s\n",name);
+			// //printf("Name = %s\n",name);
 		}else{
 			url = my_malloc(strlen(token)*sizeof(char));
 			strcpy(url,token);
-			// //fprintf(stderr,"[store_data] Url = %s\n",url);
+			// //printf("[store_data] Url = %s\n",url);
 		}
 		
 		token = strtok_r(NULL,"?",&place_holder);
 		index += 1;
 	}
 	
-	// fprintf(stderr,"[is_url_valid] name = %s and url = %s\n",name,url);
+	// printf("[is_url_valid] name = %s and url = %s\n",name,url);
 
 	int page_index = get_page_index(name);
 
 	int maxParams = get_max_params(url);
 	if(page_arr[page_index].maxParams < maxParams && m == max){
-		fprintf(stderr,"The %s file has max params = %d and that is exceeded by request with params = %d",name,page_arr[page_index].maxParams,maxParams);
+		printf("The %s file has max params = %d and that is exceeded by request with params = %d",name,page_arr[page_index].maxParams,maxParams);
 		return -1;
 	}
 
@@ -404,9 +437,9 @@ int is_url_valid(char* line,mode m){
 	page *current_page = &page_arr[page_index];
 	char *p = my_malloc(strlen(url)*sizeof(char));
 	strcpy(p,url);
-	//fprintf(stderr,"[get_parameter_obj] Original url = %s\n",url);
+	//printf("[get_parameter_obj] Original url = %s\n",url);
 
-	//fprintf(stderr,"[get_parameter_obj] Value = %s\n",p);
+	//printf("[get_parameter_obj] Value = %s\n",p);
 
 	char* token1 = my_malloc(strlen(p)*sizeof(char));
 	char* place_holder2 = my_malloc(sizeof(char));
@@ -438,7 +471,7 @@ int is_url_valid(char* line,mode m){
 		
 		char* t_rhs = my_malloc(1000);
 		strcpy(t_rhs,rhs);
-		// fprintf(stderr,"[construct_params] lhs = %s and rhs = %s\n",lhs,rhs);
+		// printf("[construct_params] lhs = %s and rhs = %s\n",lhs,rhs);
 		int param_index = get_param_index(lhs,page_index);
 
 		
@@ -446,13 +479,13 @@ int is_url_valid(char* line,mode m){
 		param url_param= current_page->url_params[param_index];
 		if(m == avg){
 			if(url_param.avg < len){
-				fprintf(stderr,"[URL Dropped]The average length of  parameter = %s is %f , the present parameter length is %d\n",lhs,url_param.avg,len);
+				printf("[URL Dropped]The average length of  parameter = %s is %f , the present parameter length is %d\n",lhs,url_param.avg,len);
 				return -1;
 			}
 		}else if(m == sd){
 			float value = 3*url_param.sd + url_param.avg;
 			if(value < len){
-				fprintf(stderr,"[URL Dropped] The (3*SD+Avg) length of  parameter = %s is %f , the present parameter length is %d\n",lhs,value,len);
+				printf("[URL Dropped] The (3*SD+Avg) length of  parameter = %s is %f , the present parameter length is %d\n",lhs,value,len);
 				return -1;
 			}
 
@@ -471,13 +504,13 @@ int is_url_valid(char* line,mode m){
 
 			if(false == 1){
 				if(i == 0){
-					fprintf(stderr,"[URL Dropped] parameter = %s doesnot accept number as input parameter.\n",lhs);
+					printf("[URL Dropped] parameter = %s doesnot accept number as input parameter.\n",lhs);
 				}
 				if(i==1){
-					fprintf(stderr,"[URL Dropped] parameter = %s doesnot accept string as input parameter.\n",lhs);
+					printf("[URL Dropped] parameter = %s doesnot accept string as input parameter.\n",lhs);
 				}
 				if(i==2){
-					fprintf(stderr,"[URL Dropped] parameter = %s doesnot accept special charachters as input parameter.\n",lhs);
+					printf("[URL Dropped] parameter = %s doesnot accept special charachters as input parameter.\n",lhs);
 				}
 				return -1;
 			}
@@ -489,7 +522,7 @@ int is_url_valid(char* line,mode m){
 
 	
 	}
-	// fprintf(stderr," backup = %s  and line = %s",backup,line);
+	// printf(" backup = %s  and line = %s",backup,line);
 	
 }
 	
@@ -498,4 +531,6 @@ void * my_malloc(size_t sz){
 }	
 
 	
+
+
 

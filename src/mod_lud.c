@@ -65,6 +65,7 @@ int doesProfileAllow(request_rec* r) {
 	while ((read = getline(&line, &len, fp)) != -1) {
 		store_data(line);
 	}
+	print_profile();
 	char* temp = my_malloc(sizeof(char) * 2000);
 	char* url = strtok_r(r->the_request, " ", &temp);
 	url = strtok_r(NULL, " ", &temp);

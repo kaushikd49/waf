@@ -9,6 +9,59 @@
 #define BUFFER 150
 #define PARAM 200
 #define CONTAINS 500
+#define NUMBER 1
+#define ALPHABET 2
+#define SPL_SYMBOL 4
+
+//New Code 
+
+
+
+void store_data();
+
+typedef enum {max,avg,charset,sd} mode;
+
+int getCharset(char);
+int getAllCharset(char*, int*);
+void * my_malloc(size_t);
+
+#define DELIMITER "@@@###"
+
+struct param{
+	int total;
+	int count;
+	float avg;
+	float sd;
+	int csets[3];
+	int sd_array[100];	
+	char paramName[100];
+};
+
+typedef struct param param;
+
+struct page{
+	char pageName[100];
+	int maxParams;
+	param url_params[100];
+	int param_arr_index[100];
+};
+
+typedef struct page page;
+
+void construct_params(int,char*);
+int is_url_valid(char*,mode);
+
+page page_arr[100];
+
+int page_arr_index[100];
+int param_arr_index[100];
+
+void add_details_to_page(char* ,char* );
+void print_profile();
+float standard_deviation(int* ,float);
+
+
+//New Code ends
 
 
 
@@ -22,57 +75,3 @@ char ** parseSignatubres(char *f);
 int req_allow(char *hdr,char **sigs);
 
 /* anomaly */
-#define DELIMITER "@@@###"
-
-struct url_params{
-	int max_parameters;
-	double max_val;
-	double min_val;
-	double avg;
-	int count;
-	int char_count;
-	double sd;
-	char input_type;
-	// double number_of_paramters;
-	char *name;
-	float valid_input[100];
-	char *valid_chars[100];
-};
-typedef struct url_params parameters;
-struct page{
-	parameters *param[2048];
-	// char* client_ip;
-	// char* local_ip;
-	char* protocol[5];
-	double time_served[2048];
-	char name[1000];
-	double keep_alive_requests[2048];
-	char* status[4];
-	double bytes_sent[2048];
-	double bytes_received[2048];
-	double bytes_transferred[2048];
-	int used;
-};
-
-void populate_min_max_avg(char* ,parameters*);
-void get_parameter_obj(char* ,int );
-
-typedef struct page Page;
-
-Page page_arr[1000];
-
-typedef enum {max,avg,char_val,sd} mode;
-
-
-void add_details_to_page(char* ,char* ,char* );
-void initialize_pages();
-void create_profile();
-void store_data();
-void test_page_content();
-void get_lhs_and_rhs(char* ,char* ,char* );
-float standard_deviation(float[],float,int);
-int is_url_valid(char*,mode);
-int get_page_index(char*);
-int get_param_index(int,char*);
-
-void * my_malloc(size_t sz);
