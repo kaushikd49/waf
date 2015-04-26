@@ -1,4 +1,4 @@
-/*#include <string.h>
+#include <string.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -162,7 +162,7 @@ void store_data(char* line){
 
 	token = strtok_r(line,DELIMITER,&place_holder);
 
-	char *status,*url,*name,*protocol;
+	char *url=NULL,*name=NULL;
 	while(token != NULL){
 		if(index == 3){
 			name = my_malloc(strlen(token)*sizeof(char));
@@ -180,7 +180,10 @@ void store_data(char* line){
 		index += 1;
 	}
 	// printf("[store_data] name = %s and url = %s\n",name,url);
-	add_details_to_page(name,url);
+	if(name==NULL || url==NULL)
+	  printf("\n\nyouSUCK!!!\n%s\n",line);
+	else
+	  add_details_to_page(name,url);
 	// free(status);
 	// free(protocol);
 	// free(name);
@@ -237,7 +240,10 @@ void construct_params(int page_index,char* url){
 
 			token2 = strtok_r(NULL,"=",&place_holder2);
 		}
-		
+		if(lhs==NULL || rhs==NULL){
+		  printf("\n%s\n",url);
+		  return;
+		}
 		char* t_rhs = my_malloc(1000);
 		strcpy(t_rhs,rhs);
 		// int len = 0;
@@ -527,10 +533,9 @@ int is_url_valid(char* line,mode m){
 }
 	
 void * my_malloc(size_t sz){
-    return malloc(2048*sizeof(char));
+    return malloc(20480*sizeof(char));
 }	
 
 	
 
 
-*/
