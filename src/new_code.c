@@ -33,6 +33,7 @@ int page_arr_index[100];
 int param_arr_index[100];
 
 void add_details_to_page(char* ,char* );
+void print_profile();
 
 int main(){
 	printf("Hello world\n");
@@ -56,9 +57,30 @@ int main(){
 		store_data(line);
 		// //printf("------\n");
 	}
-
+	print_profile();
 
 	return 10;
+}
+
+void print_profile(){
+	int page_index =0;	
+	for(page_index=0;page_index<100;page_index++){
+		if(page_arr_index[page_index] ==0)
+			break;
+		page curr_page = page_arr[page_index];
+		printf("Profile for %s\n",curr_page.pageName);
+		int param_index = 0;
+		for(param_index =0;param_index < 100;param_index++){
+			if(curr_page.param_arr_index[param_index]==0)
+				break;
+
+			param url_param = curr_page.url_params[param_index];
+			printf("Parameter Name %s",url_param.paramName);
+
+		}
+
+
+	}
 }
 
 void store_data(char* line){
@@ -98,7 +120,7 @@ void store_data(char* line){
 void add_details_to_page(char *name, char* url){
 	int index = get_page_index(name);
 	
-
+	strcpy(page_arr[index].pageName,name);
 	page_arr[index].maxParams = get_max_params(url);
 	construct_params(index,url);
 
@@ -188,7 +210,7 @@ int get_page_index(char* name){
 		if(page_arr_index[page_index] == 0){
 			page new_page;
 			int j;
-			for(j=0;j<100;i++){
+			for(j=0;j<100;j++){
 				new_page.param_arr_index[j] = 0;
 			}
 			page_arr[page_index] = new_page;
