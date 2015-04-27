@@ -26,6 +26,7 @@ typedef enum {max,avg,charset,sd} mode;
 //int getCharset(char);
 int getAllCharset(char*, int*);
 void * my_malloc(size_t);
+int get_existing_page_index(char*){
 
 #define DELIMITER "@@@###"
 

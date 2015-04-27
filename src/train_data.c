@@ -1,4 +1,4 @@
-#include "/home/kaushik/waf/src/waf.h"
+#include "waf.h"
 
 
 void print_profile(){
@@ -161,6 +161,25 @@ int get_max_params(char* url){
 	return length;
 }
 
+int get_existing_page_index(char* name){
+	
+	int page_index = -1;
+	int i=0;
+	for(i=0;i<100;i++){
+		if(page_arr_index[i] == 0){
+			continue;
+		}else{
+			// fprintf(stderr,"%s \n",name);
+			if(strcmp(page_arr[i].pageName,name) == 0){
+				page_index = i;
+				break;
+			}
+		}
+		
+	}
+	return page_index;
+}
+
 int get_page_index(char* name){
 	int page_index = -1;
 	int i=0;
@@ -276,6 +295,8 @@ int getAllCharset(char *str, int* charsetList) {
 
 }
 int is_url_valid(char* line,mode m){
+	char* backup = my_malloc(1000);
+	strcpy(backup,line);
 	char* name = NULL;
 	char* url = NULL;
 	char* token = my_malloc(10000);
@@ -301,17 +322,24 @@ int is_url_valid(char* line,mode m){
 	}
 	
 	// fprintf(stderr,"[is_url_valid] name = %s and url = %s\n",name,url);
+	
+	if(url == NULL || name == NULL){
+		strcpy(line,backup);
+		return 0;
+	}
+
 
 	int page_index = get_page_index(name);
 
+	if(page_index == -1){
+		strcpy(line,backup);
+		return 0;
+	}
 	int maxParams = get_max_params(url);
 	if(page_arr[page_index].maxParams < maxParams && m == max){
 		fprintf(stderr,"The %s file has max params = %d and that is exceeded by request with params = %d",name,page_arr[page_index].maxParams,maxParams);
 		return -1;
 	}
-
-
-
 
 	page *current_page = &page_arr[page_index];
 	char *p = my_malloc(strlen(url)*sizeof(char));
@@ -359,12 +387,16 @@ int is_url_valid(char* line,mode m){
 		if(m == avg){
 			if(url_param.avg < len){
 				fprintf(stderr,"[URL Dropped]The average length of  parameter = %s is %f , the present parameter length is %d\n",lhs,url_param.avg,len);
+				
+				strcpy(backup,line);
 				return -1;
 			}
 		}else if(m == sd){
 			float value = 3*url_param.sd + url_param.avg;
 			if(value < len){
 				fprintf(stderr,"[URL Dropped] The (3*SD+Avg) length of  parameter = %s is %f , the present parameter length is %d\n",lhs,value,len);
+
+				strcpy(backup,line);
 				return -1;
 			}
 
@@ -391,6 +423,7 @@ int is_url_valid(char* line,mode m){
 				if(i==2){
 					fprintf(stderr,"[URL Dropped] parameter = %s doesnot accept special charachters as input parameter.\n",lhs);
 				}
+				strcpy(backup,line);
 				return -1;
 			}
 			
@@ -401,6 +434,7 @@ int is_url_valid(char* line,mode m){
 
 	
 	}
+	strcpy(backup,line);
 	// fprintf(stderr," backup = %s  and line = %s",backup,line);
 	
 }
