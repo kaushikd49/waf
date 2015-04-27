@@ -13,9 +13,9 @@ void print_profile(){
 		if(page_arr_index[page_index] ==0)
 			break;
 		page* curr_page = &page_arr[page_index];
-		fprintf(stderr,"----------------------------------------------------------------------------\n");
-		fprintf(stderr,"Details for Page = %s \t and Max Params = %d\n",curr_page->pageName,curr_page->maxParams);
-		fprintf(stderr,"|ParamName\t\tAverage\t\tStd\t\t\tCharset\t\t\n");
+		/* fprintf(stderr,"----------------------------------------------------------------------------\n"); */
+		/* fprintf(stderr,"Details for Page = %s \t and Max Params = %d\n",curr_page->pageName,curr_page->maxParams); */
+		/* fprintf(stderr,"|ParamName\t\tAverage\t\tStd\t\t\tCharset\t\t\n"); */
 		// fprintf(stderr,"----------\n");
 		int param_index = 0;
 		for(param_index =0;param_index < 100;param_index++){
@@ -31,11 +31,11 @@ void print_profile(){
 			arr[1] = url_param->csets[1] == 1?'S':' ';
 			arr[2] = url_param->csets[2] == 1?'~':' ';
 			
-			fprintf(stderr,"|%s\t\t%f\t\t%f\t\t%s\n",url_param->paramName,url_param->avg,url_param->sd,arr);
+			/* fprintf(stderr,"|%s\t\t%f\t\t%f\t\t%s\n",url_param->paramName,url_param->avg,url_param->sd,arr); */
 			
 			
 		}
-		fprintf(stderr,"---------------------------------------------------------------------------\n");
+		/* fprintf(stderr,"---------------------------------------------------------------------------\n"); */
 	}
 	fflush(stderr);
 }
@@ -57,15 +57,15 @@ void store_data(char* line){
 		if(index == 3){
 			name = my_malloc(strlen(token)*sizeof(char));
 			strcpy(name,token);
-			fprintf(stderr,"Name = %s\n",name);
-			fflush(stderr);
+			/* fprintf(stderr,"Name = %s\n",name); */
+			/* fflush(stderr); */
 		}
 
 		if(index == 4){
 			url = my_malloc(strlen(token)*sizeof(char));
 			strcpy(url,token);
-			fprintf(stderr,"[store_data] Url = %s\n",url);
-			fflush(stderr);
+			/* fprintf(stderr,"[store_data] Url = %s\n",url); */
+			/* fflush(stderr); */
 		}
 		
 		token = strtok_r(NULL,DELIMITER,&place_holder);
@@ -73,12 +73,12 @@ void store_data(char* line){
 	}
 	int isMatch=match_query(url,".*=.*",REG_EXTENDED);
 	if(!isMatch){
-	  fprintf(stderr,"invalid  url = %s\n",url);
-	  fflush(stderr);
+	  /* fprintf(stderr,"invalid  url = %s\n",url); */
+	  /* fflush(stderr); */
 	    return 0;
 	}
-	fprintf(stderr,"[store_data] name = %s and url = %s\n",name,url);
-	fflush(stderr);
+	/* fprintf(stderr,"[store_data] name = %s and url = %s\n",name,url); */
+	/* fflush(stderr); */
 	add_details_to_page(name,url);
 	// free(status);
 	// free(protocol);
@@ -315,7 +315,7 @@ int getAllCharset(char *str, int* charsetList) {
 
 }
 int is_url_valid(char* line,mode m){
-	char* backup = my_malloc(1000);
+  char* backup = my_malloc(1000);
 	strcpy(backup,line);
 	char* name = NULL;
 	char* url = NULL;
@@ -341,18 +341,22 @@ int is_url_valid(char* line,mode m){
 		index += 1;
 	}
 	
-	// fprintf(stderr,"[is_url_valid] name = %s and url = %s\n",name,url);
-	
-	if(url == NULL || name == NULL){
+	/* fprintf(stderr,"[is_url_valid] name = %s and url = %s\n",name,url); */
+	/* fflush(stderr); */
+	if(url == NULL || name == NULL){	  
 		strcpy(line,backup);
+		/* fprintf(stderr,"hello ####\n"); */
+		/* fflush(stderr); */
 		return 0;
 	}
 
 
-	int page_index = get_page_index(name);
+	int page_index = get_existing_page_index(name);
 
-	if(page_index == -1){
+	if(page_index == -1){	  
 		strcpy(line,backup);
+		/* fprintf(stderr,"hello\n"); */
+		/* fflush(stderr); */
 		return 0;
 	}
 	int maxParams = get_max_params(url);
@@ -365,10 +369,10 @@ int is_url_valid(char* line,mode m){
 	page *current_page = &page_arr[page_index];
 	char *p = my_malloc(strlen(url)*sizeof(char));
 	strcpy(p,url);
-	//fprintf(stderr,"[get_parameter_obj] Original url = %s\n",url);
+	/* fprintf(stderr,"[get_parameter_obj] Original url = %s\n",url); */
 
-	//fprintf(stderr,"[get_parameter_obj] Value = %s\n",p);
-
+/* 	fprintf(stderr,"[get_parameter_obj] Value = %s\n",p); */
+/* fflush(stderr); */
 	char* token1 = my_malloc(strlen(p)*sizeof(char));
 	char* place_holder2 = my_malloc(sizeof(char));
 	token1 = strtok_r(p,"&",&place_holder2);
@@ -399,7 +403,8 @@ int is_url_valid(char* line,mode m){
 		
 		char* t_rhs = my_malloc(1000);
 		strcpy(t_rhs,rhs);
-		// fprintf(stderr,"[construct_params] lhs = %s and rhs = %s\n",lhs,rhs);
+		/* fprintf(stderr,"[construct_params] lhs = %s and rhs = %s\n",lhs,rhs); */
+/* fflush(stderr); */
 		int param_index = get_param_index(lhs,page_index);
 
 		
@@ -458,6 +463,7 @@ int is_url_valid(char* line,mode m){
 	
 	}
 	strcpy(backup,line);
+return 0;
 	// fprintf(stderr," backup = %s  and line = %s",backup,line);
 	
 }

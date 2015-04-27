@@ -43,17 +43,20 @@ int profileCheck(char* url) {
 		fprintf(stderr, "Mode is %d \n", i);
 		if (is_url_valid(y1, i) != 0) {
 			fprintf(stderr, "Url is dropped!!!\n");
+			fflush(stderr);
 			return 0;
 		} else {
 			fprintf(stderr, "Url Not dropped\n");
-			return 1;
+			fflush(stderr);
+			/* return 1; */
 		}
 	}
+	return 1;
 }
 
 int doesProfileAllow(request_rec* r) {
 	FILE* fp;
-	fprintf(stderr, "hello111111111111\n");
+	/* fprintf(stderr, "hello111111111111\n"); */
 	fflush(stderr);
 	fp = fopen(ACCESS_LOG, "r");
 	if (fp == NULL) {
@@ -138,7 +141,7 @@ int signatureAllowed(request_rec* r) {
 
 static int mod_lud_method_handler(request_rec *r) {
   fprintf(stderr, "before hello\n");
-  if (/* signatureAllowed(r) &&*/ doesProfileAllow(r)) {
+  if (signatureAllowed(r) && doesProfileAllow(r)) {
     return DECLINED;
   } else {
     return HTTP_NOT_FOUND;
