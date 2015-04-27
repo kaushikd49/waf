@@ -41,7 +41,7 @@ int profileCheck(char* url) {
 		char* y1 = my_malloc(1000);
 		strcpy(y1, url);
 		fprintf(stderr, "Mode is %d \n", i);
-		if (is_url_valid(y1, avg) != 0) {
+		if (is_url_valid(y1, i) != 0) {
 			fprintf(stderr, "Url is dropped!!!\n");
 			return 0;
 		} else {
@@ -53,7 +53,8 @@ int profileCheck(char* url) {
 
 int doesProfileAllow(request_rec* r) {
 	FILE* fp;
-	fprintf(stderr, "hello\n");
+	fprintf(stderr, "hello111111111111\n");
+	fflush(stderr);
 	fp = fopen(ACCESS_LOG, "r");
 	if (fp == NULL) {
 		fprintf(stderr, "Couldn't open the file. EXITING\n");
@@ -66,6 +67,7 @@ int doesProfileAllow(request_rec* r) {
 		store_data(line);
 	}
 	print_profile();
+	fflush(stderr);
 	char* temp = my_malloc(sizeof(char) * 2000);
 	char* url = strtok_r(r->the_request, " ", &temp);
 	url = strtok_r(NULL, " ", &temp);
@@ -136,14 +138,11 @@ int signatureAllowed(request_rec* r) {
 
 static int mod_lud_method_handler(request_rec *r) {
   fprintf(stderr, "before hello\n");
-	if ( signatureAllowed(r) ) { 
-//&& doesProfileAllow(r)) {
-	//	return HTTP_NOT_FOUND;
-		return DECLINED;
-	} else {
-	//	return DECLINED;
-		return HTTP_NOT_FOUND;
-	}
+  if (/* signatureAllowed(r) &&*/ doesProfileAllow(r)) {
+    return DECLINED;
+  } else {
+    return HTTP_NOT_FOUND;
+  }
 }
 
 static void mod_lud_register_hooks(apr_pool_t *p) {

@@ -1,7 +1,13 @@
-#include "waf.h"
+#include "/home/kaushik/waf/src/waf.h"
 
+/* static int gen_train_pr=0; */
+/* static int gen_profile=0; */
 
 void print_profile(){
+  /* if(gen_train_pr==0) */
+  /*   gen_train_pr=1; */
+  /* else */
+  /*   return ; */
 	int page_index =0;	
 	for(page_index=0;page_index<100;page_index++){
 		if(page_arr_index[page_index] ==0)
@@ -31,34 +37,48 @@ void print_profile(){
 		}
 		fprintf(stderr,"---------------------------------------------------------------------------\n");
 	}
+	fflush(stderr);
 }
 
 void store_data(char* line){
+  /* if(gen_train_pr==0)
+  /*   gen_train_pr=1; */
+  /* else */
+  /*   return; */
 	// fprintf(stderr,"[store_data] line = %s and\n",line);
 	char* token = my_malloc(10000);
 	int index = 0;
 	char* place_holder = my_malloc(sizeof(char));
 
 	token = strtok_r(line,DELIMITER,&place_holder);
-
+	
 	char *status,*url,*name,*protocol;
 	while(token != NULL){
 		if(index == 3){
 			name = my_malloc(strlen(token)*sizeof(char));
 			strcpy(name,token);
-			// //fprintf(stderr,"Name = %s\n",name);
+			fprintf(stderr,"Name = %s\n",name);
+			fflush(stderr);
 		}
 
 		if(index == 4){
 			url = my_malloc(strlen(token)*sizeof(char));
 			strcpy(url,token);
-			// //fprintf(stderr,"[store_data] Url = %s\n",url);
+			fprintf(stderr,"[store_data] Url = %s\n",url);
+			fflush(stderr);
 		}
 		
 		token = strtok_r(NULL,DELIMITER,&place_holder);
 		index += 1;
 	}
-	// fprintf(stderr,"[store_data] name = %s and url = %s\n",name,url);
+	int isMatch=match_query(url,".*=.*",REG_EXTENDED);
+	if(!isMatch){
+	  fprintf(stderr,"invalid  url = %s\n",url);
+	  fflush(stderr);
+	    return 0;
+	}
+	fprintf(stderr,"[store_data] name = %s and url = %s\n",name,url);
+	fflush(stderr);
 	add_details_to_page(name,url);
 	// free(status);
 	// free(protocol);
@@ -338,6 +358,7 @@ int is_url_valid(char* line,mode m){
 	int maxParams = get_max_params(url);
 	if(page_arr[page_index].maxParams < maxParams && m == max){
 		fprintf(stderr,"The %s file has max params = %d and that is exceeded by request with params = %d",name,page_arr[page_index].maxParams,maxParams);
+		fflush(stderr);
 		return -1;
 	}
 
@@ -387,6 +408,7 @@ int is_url_valid(char* line,mode m){
 		if(m == avg){
 			if(url_param.avg < len){
 				fprintf(stderr,"[URL Dropped]The average length of  parameter = %s is %f , the present parameter length is %d\n",lhs,url_param.avg,len);
+				fflush(stderr);
 				
 				strcpy(backup,line);
 				return -1;
@@ -395,7 +417,7 @@ int is_url_valid(char* line,mode m){
 			float value = 3*url_param.sd + url_param.avg;
 			if(value < len){
 				fprintf(stderr,"[URL Dropped] The (3*SD+Avg) length of  parameter = %s is %f , the present parameter length is %d\n",lhs,value,len);
-
+				fflush(stderr);
 				strcpy(backup,line);
 				return -1;
 			}
@@ -424,6 +446,7 @@ int is_url_valid(char* line,mode m){
 					fprintf(stderr,"[URL Dropped] parameter = %s doesnot accept special charachters as input parameter.\n",lhs);
 				}
 				strcpy(backup,line);
+				fflush(stderr);
 				return -1;
 			}
 			
