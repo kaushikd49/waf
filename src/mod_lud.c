@@ -58,10 +58,10 @@ int doesProfileAllow(request_rec* r) {
 	FILE* fp;
 	/* fprintf(stderr, "hello111111111111\n"); */
 	fflush(stderr);
-	fp = fopen(ACCESS_LOG, "r");
+	fp = fopen("access_log", "r");
 	if (fp == NULL) {
 		fprintf(stderr, "Couldn't open the file. EXITING\n");
-		exit(0);
+		return 1;
 	}
 	char* line = NULL;
 	ssize_t read;
