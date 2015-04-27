@@ -30,7 +30,7 @@
 module AP_MODULE_DECLARE_DATA lud_module;
 
 #define SIGNATURE_PATH "/home/kaushik/waf/src/docs/signatures.sig"
-#define ACCESS_LOG "/home/kaushik/waf/src/access_waf.log"
+#define ACCESS_LOG "/home/kaushik/waf/src/access_log"
 typedef struct {
 	char *string;
 } modlud_config;
@@ -58,7 +58,7 @@ int doesProfileAllow(request_rec* r) {
 	FILE* fp;
 	/* fprintf(stderr, "hello111111111111\n"); */
 	fflush(stderr);
-	fp = fopen("access_log", "r");
+	fp = fopen(ACCESS_LOG, "r");
 	if (fp == NULL) {
 		fprintf(stderr, "Couldn't open the file. EXITING\n");
 		return 1;
