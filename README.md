@@ -10,11 +10,11 @@ The details of the project are in the [report].
 
 *   Signatures
 
-    In this mode, your WAF should support a database of signatures that are characteristic of maliciousness. You should design a way to encode signatures, so that you can specify where exactly is the string that you want to match.
+    In this mode, our WAF should support a database of signatures that are characteristic of maliciousness. The design has a way to encode signatures, so that we can specify where exactly is the string that we want to match.
     
 *   Anomaly Detection
 
-    While signatures are a great way to stop known attacks, they can't stop attacks that do not have corresponding signatures. In anomaly detection, we can "learn" how legitimate traffic looks like and then if some future traffic is too different from what we've learned, we do not allow it to proceed. Here, we split the system in a training phase and an online phase. In the training phase, the WAF does not stop anything. It just collects information about all traffic passing through it. The user is then trying to use the website as much as possible, click on all possible links, and perform all possible actions. When the user is satisfied that she has exercised the web application as much as possible, it asks the WAF to create a normality profile. The WAF will look through all requests and try to make generalized rules. For this project, I want you to learn automatically the following things:
+    While signatures are a great way to stop known attacks, they can't stop attacks that do not have corresponding signatures. In anomaly detection, we can "learn" how legitimate traffic looks like and then if some future traffic is too different from what we've learned, we do not allow it to proceed. Here, we split the system in a training phase and an online phase. In the training phase, the WAF does not stop anything. It just collects information about all traffic passing through it. The user is then trying to use the website as much as possible, click on all possible links, and perform all possible actions. When the user is satisfied that she has exercised the web application as much as possible, it asks the WAF to create a normality profile. The WAF will look through all requests and try to make generalized rules. For this project, we learn automatically the following things:
     Maximum number of parameters seen for all requests across all pages
     Maximum number of parameters seen for every specific page
     Average length of values for every specific parameter of every specific page
