@@ -1,4 +1,4 @@
-##Web Application Firewall
+###Web Application Firewall
 
 A web application firewall (WAF) is a system running in-front of a web server that is responsible of inspecting all traffic coming from the Internet and relaying it to the actual web server. If a WAF sees traffic that contains an attack, it should just drop the request and do not forward it to the application. WAFs have the ability to protect (to a certain extent) vulnerable web applications by ensuring that malicious traffic never reaches the vulnerable code.
 
@@ -11,11 +11,10 @@ The details of the project are in the [report].
 *   Signatures
 
     In this mode, your WAF should support a database of signatures that are characteristic of maliciousness. You should design a way to encode signatures, so that you can specify where exactly is the string that you want to match. For example,signature that should be supported are:
-
-    HEADER:User-Agent,CONTAINS:"<script>"	/*Detect basic XSS ATTACK through User-Agent Header*/
+      HEADER:User-Agent,CONTAINS:"<script>"	/*Detect basic XSS ATTACK through User-Agent Header*/
     HEADER:User-Agent,CONTAINS:"bot"	/*Deny all requests from hosts that identify themselves as bots*/
     REQUEST_METHOD:GET,PARAMETER:*,CONTAINS:"union all select" /*Search all parameters of GET Requests for possible SQL Injection*/
-    REQUEST_METHOD:POST,PARAMETER:foo,CONTAINS:"../../../../" /*Search the parameter "foo" of POST Requests for possible Directory Traversal vulnerabilities*/
+    REQUEST_METHOD:POST,PARAMETER:foo,CONTAINS:"../../../../" /*Search the parameter "foo" of POST Requests for possible Directory Traversal vulnerabilities*/   
 
 *   Anomaly Detection
 
