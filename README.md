@@ -1,6 +1,4 @@
-#Web Application Firewall
-
-###Web Application Firewall
+##Web Application Firewall
 
 A web application firewall (WAF) is a system running in-front of a web server that is responsible of inspecting all traffic coming from the Internet and relaying it to the actual web server. If a WAF sees traffic that contains an attack, it should just drop the request and do not forward it to the application. WAFs have the ability to protect (to a certain extent) vulnerable web applications by ensuring that malicious traffic never reaches the vulnerable code.
 
